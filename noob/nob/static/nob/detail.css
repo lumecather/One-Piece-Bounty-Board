@@ -1,0 +1,508 @@
+/* ========== СТИЛИ ТОЛЬКО ДЛЯ ДЕТАЛЬНОЙ СТРАНИЦЫ ПОСТА ========== */
+/* Файл: detail.css */
+
+.detail-container {
+    max-width: 900px;
+}
+
+/* Кнопка назад */
+.back-button {
+    margin-bottom: 2rem;
+    font-family: 'Inter', sans-serif;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--accent-color);
+    text-decoration: none;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+    padding: 0.5rem 1rem;
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.back-link:hover {
+    background: var(--accent-light);
+    color: var(--text-primary);
+    transform: translateX(-5px);
+}
+
+.back-arrow {
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+/* Заголовок поста */
+.post-detail-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.post-detail-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 1rem 0;
+    line-height: 1.2;
+    text-shadow: 2px 2px 0 rgba(158, 123, 86, 0.2);
+    position: relative;
+    display: inline-block;
+    padding: 0 2rem;
+}
+
+.post-detail-title::before,
+.post-detail-title::after {
+    content: "☠";
+    font-size: 2rem;
+    color: var(--accent-light);
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.5;
+}
+
+.post-detail-title::before {
+    left: -20px;
+}
+
+.post-detail-title::after {
+    right: -20px;
+}
+
+/* Увеличенный блок награды */
+.detail-bounty-block {
+    background: linear-gradient(135deg, #2a1f15 0%, #3d2e20 100%);
+    border-left: 6px solid var(--bounty-gold);
+    padding: 1.5rem 2rem;
+    margin: 2rem 0;
+    border-radius: 0 8px 8px 0;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.detail-bounty-value {
+    font-size: 3.5rem !important;
+    line-height: 1 !important;
+}
+
+.bounty-decoration {
+    display: flex;
+    gap: 1rem;
+    font-size: 2rem;
+    opacity: 0.3;
+}
+
+/* Изображение на детальной странице */
+.detail-image-container {
+    margin: 2rem 0;
+    position: relative;
+    border: 2px solid var(--accent-light);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    background: var(--surface-color);
+}
+
+.detail-image {
+    width: 100%;
+    max-height: 500px;
+    object-fit: contain;
+    display: block;
+    filter: sepia(0.2) contrast(1.05);
+}
+
+.image-ornament-top,
+.image-ornament-bottom {
+    height: 10px;
+    background: repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 10px,
+        var(--accent-light) 10px,
+        var(--accent-light) 20px
+    );
+}
+
+/* Мета-информация */
+.post-meta {
+    display: flex;
+    justify-content: space-between;
+    padding: 1.5rem;
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    margin: 2rem 0;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.meta-icon {
+    font-size: 1.2rem;
+    color: var(--accent-light);
+}
+
+.meta-label {
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+}
+
+.meta-value {
+    font-weight: 400;
+    color: var(--text-primary);
+}
+
+/* Текст поста */
+.post-content {
+    display: flex;
+    gap: 2rem;
+    margin: 3rem 0;
+    position: relative;
+}
+
+.content-text {
+    flex: 1;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    text-align: justify;
+    padding: 0 1rem;
+}
+
+.content-decoration-left,
+.content-decoration-right {
+    font-size: 3rem;
+    color: var(--accent-light);
+    opacity: 0.3;
+    align-self: center;
+}
+
+/* Разделитель секций */
+.section-divider {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin: 3rem 0;
+    font-size: 1.5rem;
+    color: var(--accent-light);
+    opacity: 0.5;
+}
+
+/* Секция комментариев */
+.comments-section {
+    margin-top: 3rem;
+}
+
+.comments-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    text-align: center;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.title-icon {
+    font-size: 1.5rem;
+    color: var(--accent-light);
+}
+
+/* Список комментариев */
+.comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.comment-card {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    padding: 1.5rem;
+    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: 3px 3px 10px var(--shadow-color);
+}
+
+.comment-card:hover {
+    transform: translateX(5px);
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px dashed var(--border-color);
+}
+
+.comment-author {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.comment-author::before {
+    content: "⚓";
+    font-size: 1rem;
+    color: var(--accent-light);
+}
+
+.comment-date {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-family: 'Inter', sans-serif;
+}
+
+.comment-image {
+    margin: 1rem 0;
+    max-width: 200px;
+    border: 1px solid var(--border-color);
+    padding: 0.5rem;
+    background: white;
+}
+
+.comment-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: sepia(0.1);
+}
+
+.comment-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    padding: 0.5rem 0;
+}
+
+.comment-footer {
+    margin-top: 1rem;
+    text-align: right;
+    font-size: 1.2rem;
+    opacity: 0.4;
+}
+
+/* Пустые комментарии */
+.empty-comments {
+    text-align: center;
+    padding: 3rem;
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.empty-ornament-small {
+    font-size: 1.5rem;
+    color: var(--accent-light);
+    opacity: 0.4;
+    margin: 0.5rem 0;
+}
+
+/* Форма комментария */
+.comment-form-container {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    padding: 2rem;
+    margin-top: 2rem;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.comment-form-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, var(--accent-light), var(--bounty-gold), var(--accent-light));
+}
+
+.form-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.form-icon {
+    font-size: 1.5rem;
+}
+
+.comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.form-group input[type="text"],
+.form-group textarea {
+    padding: 0.8rem 1rem;
+    background: white;
+    border: 1px solid var(--border-color);
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(158, 123, 86, 0.1);
+}
+
+/* Стили для file input */
+.file-input-wrapper {
+    position: relative;
+}
+
+.file-input-wrapper input[type="file"] {
+    padding: 0.5rem;
+    background: white;
+    border: 1px dashed var(--border-color);
+    width: 100%;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+}
+
+.file-input-wrapper input[type="file"]::-webkit-file-upload-button {
+    background: var(--accent-color);
+    border: none;
+    padding: 0.5rem 1rem;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    margin-right: 1rem;
+    transition: background 0.3s ease;
+}
+
+.file-input-wrapper input[type="file"]::-webkit-file-upload-button:hover {
+    background: var(--text-primary);
+}
+
+/* Кнопка отправки */
+.submit-button {
+    background: linear-gradient(135deg, #2a1f15 0%, #3d2e20 100%);
+    border: none;
+    padding: 1rem 2rem;
+    color: #d4b48c;
+    font-family: 'Inter', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    transition: all 0.3s ease;
+    border: 1px solid var(--bounty-gold);
+    margin-top: 1rem;
+}
+
+.submit-button:hover {
+    background: linear-gradient(135deg, #3d2e20 0%, #2a1f15 100%);
+    color: var(--bounty-gold);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.button-icon {
+    font-size: 1.2rem;
+}
+
+.form-error {
+    color: #b22222;
+    font-size: 0.85rem;
+    margin-top: 0.3rem;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Адаптивность */
+@media (max-width: 600px) {
+    .post-detail-title {
+        font-size: 2.5rem;
+    }
+
+    .post-detail-title::before,
+    .post-detail-title::after {
+        display: none;
+    }
+
+    .detail-bounty-block {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .post-meta {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .post-content {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .content-decoration-left,
+    .content-decoration-right {
+        display: none;
+    }
+
+    .comment-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+}

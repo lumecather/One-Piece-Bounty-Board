@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Морской розыск</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'nob/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <p><a href="{% url 'post_create' %}">➕ Новый пост</a></p>
+    <div class="archive-container">
+        <!-- Декоративный верхний элемент -->
+        <div class="archive-decoration">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <header class="archive-header">
+            <h1 class="archive-title">WANTED</h1>
+            <p class="archive-subtitle">DEAD OR ALIVE</p>
+            <div class="title-ornament">
+                <span>☠</span>
+                <span>⚓</span>
+                <span>☠</span>
+            </div>
+        </header>
+
+        <div class="posts-grid">
+            {% for post in posts %}
+                <article class="post-card">
+                    {% if post.image %}
+                        <div class="card-image">
+                            <div class="image-overlay"></div>
+                            <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                        </div>
+                    {% else %}
+                        <div class="card-image placeholder">
+                            <div class="placeholder-content">
+                                <span class="skull-icon">☠</span>
+                                <span>Изображение отсутствует</span>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <div class="card-content">
+                        <h2><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h2>
+
+                        <!-- БЛОК С НАГРАДОЙ -->
+                        <div class="bounty-block">
+                            <span class="bounty-label">НАГРАДА</span>
+                            <span class="bounty-value">{{ post.bounty }}</span>
+                        </div>
+
+                        <p class="card-excerpt">{{ post.content|truncatewords:25 }}</p>
+                    </div>
+
+                    <div class="card-footer">
+                        <span class="card-author">{{ post.author }}</span>
+                        <span class="card-date">{{ post.date }}</span>
+                    </div>
+
+                    <!-- Декоративный номер плаката -->
+                    <div class="post-number">№{{ forloop.counter|stringformat:"03d" }}</div>
+                </article>
+            {% empty %}
+                <div class="empty-state">
+                    <div class="empty-ornament">☠</div>
+                    <p>Море пусто... пока никого не разыскивают</p>
+                    <div class="empty-ornament">☠</div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Нижний колонтитул в стиле старых документов -->
+        <footer class="archive-footer">
+            <div class="footer-line"></div>
+            <p>Бюро морской разведки • Все права защищены • Эпоха великих пиратов</p>
+            <div class="footer-line"></div>
+        </footer>
+    </div>
+</body>
+</html>
