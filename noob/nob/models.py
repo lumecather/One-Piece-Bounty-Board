@@ -23,3 +23,17 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'Комментарий от {self.author} к {self.post}'
+
+
+class PirateProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    bounty = models.IntegerField(default=0, help_text="Награда в белли")
+    crew = models.CharField(max_length=100, blank=True, help_text="Пиратская команда")
+    devil_fruit = models.CharField(max_length=100, blank=True, help_text="Дьявольский фрукт")
+    image = models.ImageField(upload_to='posts/', blank=True, null=True)
+    class1 = models.CharField(max_length=100, blank=True, help_text="Класс")
+    status = models.CharField(max_length=100, blank=True)
+
+    def __str__(self):
+        return f"{self.user.username} — {self.bounty} белл"
+

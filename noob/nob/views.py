@@ -1,8 +1,13 @@
-from .models import Post, Comment
+from .models import Post, Comment, PirateProfile
 from django.views.generic import ListView, DetailView, CreateView
 from .forms import PostForm, CommentForm
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class PostListView(ListView):
@@ -12,7 +17,8 @@ class PostListView(ListView):
     ordering = ['-date']  # новые сначала
 
 
-class PostDetailView(DetailView):
+class PostDetailView(LoginRequiredMixin, DetailView):
+    login_url = '/accounts/login/'
     model = Post
     template_name = 'nob/post_detail.html'
     context_object_name = 'post'
@@ -24,6 +30,8 @@ class PostDetailView(DetailView):
         return context
 
     def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('login')
         self.object = self.get_object()
         form = CommentForm(request.POST)
         if form.is_valid():
@@ -42,3 +50,16 @@ class PostCreateView(CreateView):
     form_class = PostForm
     template_name = 'nob/post_form.html'
     success_url = reverse_lazy('basepage')
+
+
+class RegisterView(CreateView):
+    model = User
+    form_class = UserCreationForm
+    template_name = 'registration/register.html'
+    success_url = reverse_lazy('login')
+
+
+@receiver(post_save, sender=User)
+def create_pirate_profile(sender, instance, created, **kwargs):
+    if created:
+        PirateProfile.objects.create(user=instance)

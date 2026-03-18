@@ -1,6 +1,10 @@
 from django.contrib import admin
 
-from .models import Post, Comment
+from .models import Post, Comment, PirateProfile
+
+
+class PirateProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'bounty', 'crew', 'devil_fruit', "class1", "status")
 
 
 class PostAdmin(admin.ModelAdmin):
@@ -17,5 +21,7 @@ class PostAdmin(admin.ModelAdmin):
     has_image.short_description = 'Есть фото'
     has_image.boolean = True
 
+
+admin.site.register(PirateProfile, PirateProfileAdmin)
 admin.site.register(Post, PostAdmin)
 admin.site.register(Comment)
