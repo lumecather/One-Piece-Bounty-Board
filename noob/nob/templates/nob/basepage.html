@@ -4,12 +4,14 @@
     <title>Морской розыск</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'nob/style.css' %}">
+    <link rel="stylesheet" href="{% static 'nob/navbar.css' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <p><a href="{% url 'post_create' %}">➕ Новый пост</a></p>
+    {% include 'nob/navbar.html' %}
+
     <div class="archive-container">
         <!-- Декоративный верхний элемент -->
         <div class="archive-decoration">

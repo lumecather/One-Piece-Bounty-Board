@@ -1,13 +1,11 @@
 from .models import Post, Comment, PirateProfile
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from .forms import PostForm, CommentForm
 from django.urls import reverse_lazy
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 
 
 class PostListView(ListView):
@@ -45,11 +43,16 @@ class PostDetailView(LoginRequiredMixin, DetailView):
             return self.render_to_response(context)
 
 
-class PostCreateView(CreateView):
+class PostCreateView(LoginRequiredMixin, CreateView):
+    login_url = '/accounts/login/'
     model = Post
     form_class = PostForm
     template_name = 'nob/post_form.html'
     success_url = reverse_lazy('basepage')
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
 
 class RegisterView(CreateView):
@@ -59,7 +62,32 @@ class RegisterView(CreateView):
     success_url = reverse_lazy('login')
 
 
-@receiver(post_save, sender=User)
-def create_pirate_profile(sender, instance, created, **kwargs):
-    if created:
-        PirateProfile.objects.create(user=instance)
+class ProfileView(LoginRequiredMixin, DetailView):
+    login_url = '/accounts/login/'
+    model = PirateProfile
+    template_name = 'nob/profile.html'
+    context_object_name = 'profile'
+
+    def get_object(self):
+        if 'pk' in self.kwargs:
+            return get_object_or_404(PirateProfile, pk=self.kwargs['pk'])
+        return get_object_or_404(PirateProfile, user=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['can_edit'] = self.get_object().user == self.request.user
+        return context
+
+
+class ProfileEditView(LoginRequiredMixin, UpdateView):
+    login_url = '/accounts/login/'
+    model = PirateProfile
+    template_name = 'nob/profile_edit.html'
+    fields = ['bounty', 'crew', 'devil_fruit', 'image', 'class1', 'status']
+    context_object_name = 'profile'
+
+    def get_object(self):
+        return get_object_or_404(PirateProfile, user=self.request.user)
+
+    def get_success_url(self):
+        return reverse_lazy('profile', kwargs={'pk': self.object.pk})

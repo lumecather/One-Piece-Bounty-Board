@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% if profile.user.username %}{{ profile.user.username }}{% else %}Профиль{% endif %} | Морской розыск</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'nob/style.css' %}">
+    <link rel="stylesheet" href="{% static 'nob/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'nob/profile.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    {% include 'nob/navbar.html' %}
+
+    <div class="profile-container">
+        <!-- Декоративный верхний элемент -->
+        <div class="archive-decoration">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <header class="archive-header">
+            <h1 class="archive-title">WANTED</h1>
+            <p class="archive-subtitle">ПИРАТСКИЙ ПРОФИЛЬ</p>
+            <div class="title-ornament">
+                <span>☠</span>
+                <span>⚓</span>
+                <span>☠</span>
+            </div>
+        </header>
+
+        {% if can_edit %}
+        <div class="edit-banner">
+            <a href="{% url 'profile_edit' %}" class="edit-profile-btn">✎ РЕДАКТИРОВАТЬ ПРОФИЛЬ</a>
+        </div>
+        {% endif %}
+
+        <div class="profile-card">
+            <!-- Изображение профиля -->
+            <div class="profile-image-section">
+                {% if profile.image %}
+                    <div class="profile-image-wrapper">
+                        <div class="image-overlay"></div>
+                        <img src="{{ profile.image.url }}" alt="{{ profile.user.username }}" class="profile-image">
+                    </div>
+                {% else %}
+                    <div class="profile-image-wrapper placeholder">
+                        <div class="placeholder-content">
+                            <span class="skull-icon">☠</span>
+                            <span>Нет изображения</span>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Информация о пирате -->
+            <div class="profile-info">
+                <div class="pirate-name">
+                    <h2>{{ profile.user.username }}</h2>
+                    <div class="name-ornament">⚔️</div>
+                </div>
+
+                <!-- БЛОК С НАГРАДОЙ -->
+                <div class="bounty-block large">
+                    <span class="bounty-label">НАГРАДА</span>
+                    <span class="bounty-value">{{ profile.bounty|default:"0" }} белл</span>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">КОМАНДА</span>
+                        <span class="info-value">{{ profile.crew|default:"Неизвестно" }}</span>
+                    </div>
+
+                    <div class="info-item">
+                        <span class="info-label">ДЬЯВОЛЬСКИЙ ФРУКТ</span>
+                        <span class="info-value">{{ profile.devil_fruit|default:"Отсутствует" }}</span>
+                    </div>
+
+                    <div class="info-item">
+                        <span class="info-label">КЛАСС</span>
+                        <span class="info-value">{{ profile.class1|default:"Не определен" }}</span>
+                    </div>
+
+                    <div class="info-item">
+                        <span class="info-label">СТАТУС</span>
+                        <span class="info-value">{{ profile.status|default:"В розыске" }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="archive-footer">
+            <div class="footer-line"></div>
+            <p>Бюро морской разведки • Все права защищены • Эпоха великих пиратов</p>
+            <div class="footer-line"></div>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class Post(models.Model):
@@ -37,3 +39,7 @@ class PirateProfile(models.Model):
     def __str__(self):
         return f"{self.user.username} — {self.bounty} белл"
 
+@receiver(post_save, sender=User)
+def create_pirate_profile(sender, instance, created, **kwargs):
+    if created:
+        PirateProfile.objects.create(user=instance)

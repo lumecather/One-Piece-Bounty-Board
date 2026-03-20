@@ -1,0 +1,327 @@
+/* ========== ОБЩИЕ СТИЛИ ДЛЯ ПРОФИЛЯ ========== */
+.profile-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+/* ========== БАННЕР РЕДАКТИРОВАНИЯ ========== */
+.edit-banner {
+    text-align: right;
+    margin: 20px 0;
+}
+
+.edit-profile-btn {
+    display: inline-block;
+    background: #b87333;
+    color: #fff;
+    padding: 10px 25px;
+    text-decoration: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    letter-spacing: 1px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.edit-profile-btn:hover {
+    background: #c9772e;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(184, 115, 51, 0.3);
+}
+
+/* ========== КАРТОЧКА ПРОФИЛЯ ========== */
+.profile-card {
+    background: linear-gradient(135deg, rgba(26, 20, 15, 0.95) 0%, rgba(20, 15, 10, 0.98) 100%);
+    border: 2px solid #8b5a2b;
+    border-radius: 15px;
+    padding: 40px;
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Секция с изображением */
+.profile-image-section {
+    flex: 1;
+    min-width: 250px;
+}
+
+.profile-image-wrapper {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 3px solid #b87333;
+    position: relative;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+.profile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Секция с информацией */
+.profile-info {
+    flex: 2;
+    min-width: 300px;
+}
+
+.pirate-name {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #b87333;
+    padding-bottom: 15px;
+}
+
+.pirate-name h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    color: #ffd966;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.name-ornament {
+    font-size: 24px;
+    color: #b87333;
+}
+
+/* Блок награды увеличенный */
+.bounty-block.large {
+    background: linear-gradient(135deg, #2c2418 0%, #1e1810 100%);
+    padding: 20px;
+    margin-bottom: 30px;
+    text-align: center;
+    border-radius: 10px;
+    border-left: 4px solid #ffd700;
+}
+
+.bounty-block.large .bounty-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    letter-spacing: 3px;
+    color: #b87333;
+    display: block;
+}
+
+.bounty-block.large .bounty-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: #ffd966;
+    display: block;
+    margin-top: 10px;
+}
+
+/* Сетка информации */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.info-item {
+    background: rgba(0, 0, 0, 0.4);
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 3px solid #b87333;
+    transition: all 0.3s ease;
+}
+
+.info-item:hover {
+    background: rgba(0, 0, 0, 0.6);
+    transform: translateX(5px);
+}
+
+.info-label {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: #b87333;
+    margin-bottom: 8px;
+}
+
+.info-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #e8ddc3;
+}
+
+/* ========== ФОРМА РЕДАКТИРОВАНИЯ ========== */
+.edit-form-container {
+    background: linear-gradient(135deg, rgba(26, 20, 15, 0.95) 0%, rgba(20, 15, 10, 0.98) 100%);
+    border: 2px solid #8b5a2b;
+    border-radius: 15px;
+    padding: 40px;
+    margin-top: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.pirate-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: #b87333;
+    margin-bottom: 10px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid #8b5a2b;
+    border-radius: 6px;
+    color: #e8ddc3;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #ffd966;
+    box-shadow: 0 0 10px rgba(255, 217, 102, 0.3);
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.form-group input[type="file"] {
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.form-help {
+    display: block;
+    font-size: 11px;
+    color: #8b5a2b;
+    margin-top: 5px;
+    font-family: 'Inter', sans-serif;
+}
+
+.current-image {
+    margin-top: 15px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+}
+
+.current-image p {
+    font-size: 12px;
+    color: #b87333;
+    margin-bottom: 10px;
+}
+
+.thumbnail {
+    max-width: 100px;
+    max-height: 100px;
+    border-radius: 6px;
+    border: 1px solid #8b5a2b;
+}
+
+.form-actions {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 35px;
+}
+
+.submit-btn,
+.cancel-btn {
+    padding: 12px 30px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    letter-spacing: 2px;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.submit-btn {
+    background: linear-gradient(135deg, #b87333 0%, #8b5a2b 100%);
+    color: #fff;
+}
+
+.submit-btn:hover {
+    background: linear-gradient(135deg, #c9772e 0%, #9b6a3b 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(184, 115, 51, 0.4);
+}
+
+.cancel-btn {
+    background: rgba(139, 69, 19, 0.3);
+    color: #e8ddc3;
+    border: 1px solid #8b5a2b;
+    text-align: center;
+}
+
+.cancel-btn:hover {
+    background: rgba(139, 69, 19, 0.5);
+    transform: translateY(-2px);
+}
+
+/* ========== АДАПТИВНОСТЬ ========== */
+@media (max-width: 768px) {
+    .profile-container {
+        padding: 10px;
+        margin: 20px auto;
+    }
+
+    .profile-card {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .profile-image-section {
+        min-width: auto;
+    }
+
+    .pirate-name h2 {
+        font-size: 24px;
+    }
+
+    .bounty-block.large .bounty-value {
+        font-size: 28px;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .edit-form-container {
+        padding: 20px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .submit-btn,
+    .cancel-btn {
+        text-align: center;
+    }
+}

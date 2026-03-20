@@ -1,0 +1,27 @@
+{% load static %}
+<nav class="navbar">
+    <div class="nav-left">
+        <a href="{% url 'basepage' %}" class="nav-btn">🏴‍☠️ ГАВАНЬ</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'post_create' %}" class="nav-link">➕ НОВЫЙ ПОСТ</a>
+        {% endif %}
+    </div>
+    <div class="nav-right">
+        {% if user.is_authenticated %}
+            <div class="user-menu">
+                <a href="{% url 'profile_self' %}" class="profile-link">
+                    {% if user.profile.image %}
+                        <img src="{{ user.profile.image.url }}" alt="avatar" class="nav-avatar">
+                    {% else %}
+                        <span class="nav-avatar-placeholder">☠</span>
+                    {% endif %}
+                    <span class="username">{{ user.username }}</span>
+                </a>
+                <a href="{% url 'logout' %}" class="logout-link">ВЫЙТИ</a>
+            </div>
+        {% else %}
+            <a href="{% url 'login' %}" class="nav-link">ВХОД</a>
+            <a href="{% url 'register' %}" class="nav-link">РЕГИСТРАЦИЯ</a>
+        {% endif %}
+    </div>
+</nav>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Редактировать профиль | Морской розыск</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'nob/style.css' %}">
+    <link rel="stylesheet" href="{% static 'nob/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'nob/profile.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    {% include 'nob/navbar.html' %}
+
+    <div class="profile-container">
+        <div class="archive-decoration">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <header class="archive-header">
+            <h1 class="archive-title">EDIT</h1>
+            <p class="archive-subtitle">РЕДАКТИРОВАНИЕ ПРОФИЛЯ</p>
+            <div class="title-ornament">
+                <span>✎</span>
+                <span>☠</span>
+                <span>✎</span>
+            </div>
+        </header>
+
+        <div class="edit-form-container">
+            <form method="post" enctype="multipart/form-data" class="pirate-form">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="{{ form.bounty.id_for_label }}">НАГРАДА (белли)</label>
+                    {{ form.bounty }}
+                    <small class="form-help">Награда за голову в белли</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.crew.id_for_label }}">ПИРАТСКАЯ КОМАНДА</label>
+                    {{ form.crew }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.devil_fruit.id_for_label }}">ДЬЯВОЛЬСКИЙ ФРУКТ</label>
+                    {{ form.devil_fruit }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.class1.id_for_label }}">КЛАСС</label>
+                    {{ form.class1 }}
+                    <small class="form-help">Мечник, снайпер, капитан, навигатор и т.д.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.status.id_for_label }}">СТАТУС</label>
+                    {{ form.status }}
+                    <small class="form-help">Активен, в плену, скрывается</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.image.id_for_label }}">ИЗОБРАЖЕНИЕ</label>
+                    {{ form.image }}
+                    {% if profile.image %}
+                        <div class="current-image">
+                            <p>Текущее изображение:</p>
+                            <img src="{{ profile.image.url }}" alt="Текущее фото" class="thumbnail">
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="submit-btn">СОХРАНИТЬ</button>
+                    <a href="{% url 'profile_self' %}" class="cancel-btn">ОТМЕНА</a>
+                </div>
+            </form>
+        </div>
+
+        <footer class="archive-footer">
+            <div class="footer-line"></div>
+            <p>Бюро морской разведки • Все права защищены • Эпоха великих пиратов</p>
+            <div class="footer-line"></div>
+        </footer>
+    </div>
+</body>
+</html>
