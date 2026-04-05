@@ -17,7 +17,12 @@
                     {% endif %}
                     <span class="username">{{ user.username }}</span>
                 </a>
-                <a href="{% url 'logout' %}" class="logout-link">ВЫЙТИ</a>
+                <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" style="background: none; border: none; color: #007bff; cursor: pointer;">
+                        Выйти
+                    </button>
+                </form>
             </div>
         {% else %}
             <a href="{% url 'login' %}" class="nav-link">ВХОД</a>

@@ -6,6 +6,10 @@ from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
+from .serializers import PostSerializer, CommentSerializer, PirateProfileSerializer
+from .permissions import IsAuthorOrReadOnly
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import viewsets, permissions, filters
 
 
 class PostListView(ListView):
@@ -15,7 +19,7 @@ class PostListView(ListView):
     ordering = ['-date']  # новые сначала
 
 
-class PostDetailView(LoginRequiredMixin, DetailView):
+class PostDetailView(DetailView):
     login_url = '/accounts/login/'
     model = Post
     template_name = 'nob/post_detail.html'
@@ -91,3 +95,70 @@ class ProfileEditView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('profile', kwargs={'pk': self.object.pk})
+
+
+class PostViewSet(viewsets.ModelViewSet):
+    """
+    API для работы с постами (розыскными объявлениями)
+    """
+    queryset = Post.objects.all().select_related('author').prefetch_related('comments')
+    serializer_class = PostSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['author__username', 'date']  # фильтр по автору и дате
+    search_fields = ['title', 'content']  # поиск по заголовку и тексту
+    ordering_fields = ['date', 'title']  # сортировка
+    ordering = ['-date']  # по умолчанию: новые сверху
+
+    def get_permissions(self):
+        """
+        Назначаем права доступа в зависимости от действия
+        """
+        if self.action == 'create':
+            # Создать пост может только авторизованный
+            return [permissions.IsAuthenticated()]
+        elif self.action in ['update', 'partial_update', 'destroy']:
+            # Изменить/удалить может только автор
+            return [permissions.IsAuthenticated(), IsAuthorOrReadOnly()]
+        # Список и детальная страница — всем
+        return [permissions.AllowAny()]
+
+    def perform_create(self, serializer):
+        """
+        При создании поста автоматически подставляем автора
+        """
+        serializer.save(author=self.request.user)
+
+
+class CommentViewSet(viewsets.ModelViewSet):
+    """
+    API для комментариев
+    """
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['post', 'author']
+
+    def get_permissions(self):
+        if self.action == 'create':
+            return [permissions.IsAuthenticated()]
+        return [permissions.AllowAny()]
+
+    def perform_create(self, serializer):
+        """
+        При создании комментария можно указать пост из данных
+        """
+        serializer.save()
+
+
+class PirateProfileViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API для профилей пиратов (только чтение)
+    """
+    queryset = PirateProfile.objects.all().select_related('user')
+    serializer_class = PirateProfileSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['crew', 'devil_fruit']
+    search_fields = ['user__username', 'crew']
+
+    def get_permissions(self):
+        return [permissions.AllowAny()]
