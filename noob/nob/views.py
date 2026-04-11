@@ -10,6 +10,7 @@ from .serializers import PostSerializer, CommentSerializer, PirateProfileSeriali
 from .permissions import IsAuthorOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, permissions, filters
+from .tasks import send_welcome_email
 
 
 class PostListView(ListView):
@@ -64,6 +65,12 @@ class RegisterView(CreateView):
     form_class = UserCreationForm
     template_name = 'registration/register.html'
     success_url = reverse_lazy('login')
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        # Отправляем письмо в фоне (не ждём)
+        send_welcome_email.delay(self.object.email, self.object.username)
+        return response
 
 
 class ProfileView(LoginRequiredMixin, DetailView):
