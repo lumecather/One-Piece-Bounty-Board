@@ -1,0 +1,426 @@
+/* Стиль "Морской архив" — с наградой */
+
+:root {
+    --bg-color: #e8dfd1;       /* Теплый пергамент */
+    --surface-color: #fcf7f0;   /* Светлая бумага */
+    --text-primary: #2e241b;    /* Темный сепия */
+    --text-secondary: #6b5a4b;  /* Коричневато-серый */
+    --accent-color: #9e7b56;    /* Теплая бронза */
+    --accent-light: #d4b48c;    /* Светлая бронза */
+    --border-color: #cbb99d;    /* Цвет старой бумаги */
+    --shadow-color: rgba(0, 0, 0, 0.08);
+
+    /* Цвета для награды */
+    --bounty-gold: #d4af37;      /* Золото */
+    --bounty-gold-dark: #b8860b; /* Темное золото */
+    --bounty-glow: rgba(212, 175, 55, 0.3); /* Свечение */
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: var(--bg-color);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    color: var(--text-primary);
+    line-height: 1.5;
+    background-image:
+        linear-gradient(rgba(200, 180, 150, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(200, 180, 150, 0.1) 1px, transparent 1px);
+    background-size: 30px 30px;
+    position: relative;
+}
+
+/* Текстура старой бумаги поверх фона */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="1" stitchTiles="stitch"/></filter><rect width="100" height="100" filter="url(%23noise)" opacity="0.03"/></svg>');
+    pointer-events: none;
+    z-index: 1;
+}
+
+.archive-container {
+    max-width: 1300px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: rgba(252, 247, 240, 0.7);
+    backdrop-filter: blur(2px);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 2;
+}
+
+/* Декоративные элементы сверху */
+.archive-decoration {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.archive-decoration span {
+    width: 80px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+}
+
+.archive-decoration span:nth-child(2) {
+    width: 40px;
+    background: var(--accent-color);
+}
+
+/* Хедер */
+.archive-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.archive-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 5rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    margin: 0;
+    line-height: 1;
+    text-shadow: 2px 2px 0 rgba(158, 123, 86, 0.2);
+    position: relative;
+    display: inline-block;
+    padding: 0 2rem;
+}
+
+.archive-title::before,
+.archive-title::after {
+    content: "⚓";
+    font-size: 2rem;
+    color: var(--accent-light);
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.5;
+}
+
+.archive-title::before {
+    left: -20px;
+}
+
+.archive-title::after {
+    right: -20px;
+}
+
+.archive-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 300;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent-color);
+    margin: 0.5rem 0 1rem;
+}
+
+.title-ornament {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    font-size: 1.5rem;
+    color: var(--accent-light);
+    opacity: 0.6;
+}
+
+/* Сетка */
+.posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 2.5rem;
+    margin: 2rem 0;
+}
+
+/* Карточка */
+.post-card {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 5px 5px 15px var(--shadow-color);
+}
+
+.post-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Эффект потертости на карточке */
+.post-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><filter id="noise2"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="1" stitchTiles="stitch"/></filter><rect width="100" height="100" filter="url(%23noise2)" opacity="0.02"/></svg>');
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Изображение */
+.card-image {
+    height: 260px;
+    overflow: hidden;
+    position: relative;
+    border-bottom: 2px solid var(--accent-light);
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(158, 123, 86, 0.1) 0%, transparent 50%);
+    z-index: 2;
+    pointer-events: none;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s ease;
+    filter: sepia(0.2) contrast(1.05);
+}
+
+.post-card:hover .card-image img {
+    transform: scale(1.05);
+}
+
+/* Placeholder */
+.card-image.placeholder {
+    background: linear-gradient(135deg, #e8e0d6 0%, #d4c9bc 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.placeholder-content {
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.skull-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 0.5rem;
+    opacity: 0.4;
+}
+
+/* Контент */
+.card-content {
+    padding: 1.8rem 1.8rem 1rem;
+    flex-grow: 1;
+    position: relative;
+}
+
+.card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0 0 1rem 0;
+    color: var(--text-primary);
+    line-height: 1.2;
+    border-left: 3px solid var(--accent-light);
+    padding-left: 1rem;
+}
+
+/* ========== БЛОК С НАГРАДОЙ ========== */
+.bounty-block {
+    background: linear-gradient(135deg, #2a1f15 0%, #3d2e20 100%);
+    border-left: 4px solid var(--bounty-gold);
+    padding: 0.8rem 1.2rem;
+    margin: 0 0 1.2rem 0;
+    border-radius: 0 4px 4px 0;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Вариант 1: Золотой шикарный */
+.bounty-label {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #d4b48c;
+    opacity: 0.9;
+    margin-bottom: 0.2rem;
+}
+
+.bounty-value {
+    display: block;
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 2rem;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #f7e7c8 0%, #d4af37 50%, #b8860b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+    letter-spacing: 0.02em;
+}
+
+/* Вариант 2: Для Berry (если используешь ванписские деньги) */
+.bounty-value.berry::after {
+    content: " ฿";
+    font-size: 1.5rem;
+    opacity: 0.8;
+}
+
+/* Вариант 3: Альтернативное оформление (раскомментируй, если хочешь попробовать другой стиль)
+.alternative-bounty .bounty-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 2.2rem;
+    color: var(--bounty-gold);
+    text-shadow:
+        1px 1px 0 #000,
+        2px 2px 0 #4a3723,
+        3px 3px 0 #4a3723;
+    letter-spacing: 0.05em;
+}
+*/
+
+/* Декоративный элемент справа от награды (монетки) */
+.bounty-block::after {
+    content: "💰";
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.5rem;
+    opacity: 0.2;
+    filter: drop-shadow(0 0 2px gold);
+}
+
+.card-excerpt {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin: 1rem 0 0;
+    line-height: 1.7;
+    font-weight: 300;
+    font-style: italic;
+}
+
+/* Футер карточки */
+.card-footer {
+    padding: 1rem 1.8rem 1.5rem;
+    border-top: 1px dashed var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    position: relative;
+}
+
+.card-author, .card-date {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.card-author::before {
+    content: "⚓";
+    font-size: 1rem;
+    color: var(--accent-light);
+}
+
+.card-date::before {
+    content: "⌛";
+    font-size: 1rem;
+    color: var(--accent-light);
+}
+
+/* Номер плаката */
+.post-number {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.9rem;
+    color: var(--accent-light);
+    opacity: 0.6;
+    letter-spacing: 1px;
+    z-index: 3;
+}
+
+/* Пустое состояние */
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 4rem;
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+}
+
+.empty-ornament {
+    font-size: 2rem;
+    color: var(--accent-light);
+    opacity: 0.4;
+    margin: 0.5rem 0;
+}
+
+/* Футер архива */
+.archive-footer {
+    margin-top: 4rem;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.footer-line {
+    width: 100px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-light), transparent);
+    margin: 1rem auto;
+}
+
+/* Адаптивность */
+@media (max-width: 600px) {
+    .archive-container {
+        padding: 1rem;
+        margin: 1rem;
+    }
+
+    .archive-title {
+        font-size: 3rem;
+    }
+
+    .archive-title::before,
+    .archive-title::after {
+        display: none;
+    }
+
+    .posts-grid {
+        gap: 1.5rem;
+    }
+
+    .bounty-value {
+        font-size: 1.6rem;
+    }
+}
+
