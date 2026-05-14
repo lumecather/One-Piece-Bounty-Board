@@ -18,7 +18,7 @@ class Post(models.Model):
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
-    author = models.CharField(max_length=100)  # имя комментирующего
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
     text = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to="comments/", blank=True, null=True)
@@ -28,16 +28,21 @@ class Comment(models.Model):
 
 
 class PirateProfile(models.Model):
+    class Role(models.TextChoices):
+        USERR = "just_user", "Пользователь"
+        PIRATE = 'pirate', 'Пират'
+        HUNTER = 'hunter', 'Охотник за головами'
+        ADMIN = 'admin', 'Администратор'
+        OFFICIAL = 'official', 'Сотрудник организации'
+
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    bounty = models.IntegerField(default=0, help_text="Награда в белли")
-    crew = models.CharField(max_length=100, blank=True, help_text="Пиратская команда")
-    devil_fruit = models.CharField(max_length=100, blank=True, help_text="Дьявольский фрукт")
-    image = models.ImageField(upload_to='posts/', blank=True, null=True)
-    class1 = models.CharField(max_length=100, blank=True, help_text="Класс")
-    status = models.CharField(max_length=100, blank=True)
+    image = models.ImageField(upload_to='avatars/', blank=True, null=True)
+    role = models.CharField(max_length=20, choices=Role.choices, default=Role.USERR)
+    organization = models.CharField(max_length=100, blank=True, help_text='Название организации (если есть)')
 
     def __str__(self):
-        return f"{self.user.username} — {self.bounty} белл"
+        return f"{self.user.username} — {self.get_role_display()}"
+
 
 @receiver(post_save, sender=User)
 def create_pirate_profile(sender, instance, created, **kwargs):

@@ -2,7 +2,7 @@
 <nav class="navbar">
     <div class="nav-left">
         <a href="{% url 'basepage' %}" class="nav-btn">🏴‍☠️ ГАВАНЬ</a>
-        {% if user.is_authenticated %}
+        {% if user.is_authenticated and user.profile.role in 'official admin' %}
             <a href="{% url 'post_create' %}" class="nav-link">➕ НОВЫЙ ПОСТ</a>
         {% endif %}
     </div>

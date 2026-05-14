@@ -14,7 +14,6 @@
     {% include 'nob/navbar.html' %}
 
     <div class="profile-container">
-        <!-- Декоративный верхний элемент -->
         <div class="archive-decoration">
             <span></span>
             <span></span>
@@ -23,7 +22,7 @@
 
         <header class="archive-header">
             <h1 class="archive-title">WANTED</h1>
-            <p class="archive-subtitle">ПИРАТСКИЙ ПРОФИЛЬ</p>
+            <p class="archive-subtitle">ПРОФИЛЬ</p>
             <div class="title-ornament">
                 <span>☠</span>
                 <span>⚓</span>
@@ -38,7 +37,6 @@
         {% endif %}
 
         <div class="profile-card">
-            <!-- Изображение профиля -->
             <div class="profile-image-section">
                 {% if profile.image %}
                     <div class="profile-image-wrapper">
@@ -55,40 +53,23 @@
                 {% endif %}
             </div>
 
-            <!-- Информация о пирате -->
             <div class="profile-info">
                 <div class="pirate-name">
                     <h2>{{ profile.user.username }}</h2>
+                    <span class="role-badge {% if profile.role == 'official' %}official{% endif %}">
+                        {{ profile.get_role_display }}
+                    </span>
                     <div class="name-ornament">⚔️</div>
                 </div>
 
-                <!-- БЛОК С НАГРАДОЙ -->
-                <div class="bounty-block large">
-                    <span class="bounty-label">НАГРАДА</span>
-                    <span class="bounty-value">{{ profile.bounty|default:"0" }} белл</span>
-                </div>
-
+                {% if profile.organization %}
                 <div class="info-grid">
                     <div class="info-item">
-                        <span class="info-label">КОМАНДА</span>
-                        <span class="info-value">{{ profile.crew|default:"Неизвестно" }}</span>
-                    </div>
-
-                    <div class="info-item">
-                        <span class="info-label">ДЬЯВОЛЬСКИЙ ФРУКТ</span>
-                        <span class="info-value">{{ profile.devil_fruit|default:"Отсутствует" }}</span>
-                    </div>
-
-                    <div class="info-item">
-                        <span class="info-label">КЛАСС</span>
-                        <span class="info-value">{{ profile.class1|default:"Не определен" }}</span>
-                    </div>
-
-                    <div class="info-item">
-                        <span class="info-label">СТАТУС</span>
-                        <span class="info-value">{{ profile.status|default:"В розыске" }}</span>
+                        <span class="info-label">ОРГАНИЗАЦИЯ</span>
+                        <span class="info-value">{{ profile.organization }}</span>
                     </div>
                 </div>
+                {% endif %}
             </div>
         </div>
 

@@ -4,7 +4,8 @@ from .models import Post, Comment, PirateProfile
 
 
 class PirateProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'bounty', 'crew', 'devil_fruit', "class1", "status")
+    list_display = ('user', "image", 'role')
+    list_filter = ('role',)
 
 
 class PostAdmin(admin.ModelAdmin):

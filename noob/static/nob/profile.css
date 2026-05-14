@@ -78,6 +78,7 @@
     margin-bottom: 25px;
     border-bottom: 2px solid #b87333;
     padding-bottom: 15px;
+    flex-wrap: wrap;
 }
 
 .pirate-name h2 {
@@ -91,6 +92,51 @@
 .name-ornament {
     font-size: 24px;
     color: #b87333;
+}
+
+/* ========== СТИЛИ ДЛЯ РОЛИ (ЯРКО И ЗАМЕТНО) ========== */
+.role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #2c3e2b;
+    color: #ffd966 !important;
+    font-size: 0.8rem;
+    font-weight: bold;
+    padding: 6px 14px;
+    border-radius: 30px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-shadow: none;
+    border: 1px solid #ffd966;
+    box-shadow: 0 0 8px rgba(255, 217, 102, 0.3);
+    margin-left: 12px;
+}
+
+.role-badge::before {
+    content: "⚔️";
+    font-size: 12px;
+    margin-right: 4px;
+}
+
+.role-badge.official {
+    background: #1a3a4f;
+    color: #ffd966 !important;
+    border-color: #c9a32b;
+    box-shadow: 0 0 10px rgba(201, 163, 43, 0.4);
+}
+
+.role-badge.admin {
+    background: #4a1a2e;
+    color: #ffb347 !important;
+    border-color: #ffb347;
+    box-shadow: 0 0 10px rgba(255, 180, 71, 0.4);
+}
+
+.role-badge.pirate {
+    background: #1e1a1a;
+    color: #c9a32b !important;
+    border-color: #8b5a2b;
 }
 
 /* Блок награды увеличенный */
@@ -323,5 +369,17 @@
     .submit-btn,
     .cancel-btn {
         text-align: center;
+    }
+
+    .role-badge {
+        font-size: 0.7rem;
+        padding: 4px 10px;
+        margin-left: 0;
+        margin-top: 8px;
+    }
+
+    .pirate-name {
+        flex-direction: column;
+        align-items: flex-start;
     }
 }

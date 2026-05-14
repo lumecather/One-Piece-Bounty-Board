@@ -5,336 +5,84 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'nob/style.css' %}">
     <link rel="stylesheet" href="{% static 'nob/navbar.css' %}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
     <style>
-        /* Специальные стили для формы создания поста */
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            max-width: 100%;
-            box-sizing: border-box; /* Это важно! */
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid #8b5a2b;
-            border-radius: 6px;
-            color: #e8ddc3;
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .bounty-input-wrapper {
-            position: relative;
-            width: 100%;
-            max-width: 100%;
-            box-sizing: border-box;
-        }
-
-        .bounty-input-wrapper input {
-            width: 100%;
-            max-width: 100%;
-            padding-right: 60px; /* место для текста "белли" */
-            box-sizing: border-box;
-        }
-
-        .bounty-input-wrapper::after {
-            content: "белли";
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #b87333;
-            font-family: 'Inter', sans-serif;
-            font-size: 12px;
-            pointer-events: none; /* чтобы клик проходил сквозь */
-        }
-
-        .form-container {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 20px;
-        }
-
-        .post-form-card {
-            background: linear-gradient(135deg, rgba(26, 20, 15, 0.95) 0%, rgba(20, 15, 10, 0.98) 100%);
-            border: 2px solid #8b5a2b;
-            border-radius: 15px;
-            padding: 40px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .form-title {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .form-title h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 36px;
-            color: #ffd966;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            margin-bottom: 10px;
-        }
-
-        .form-title .subtitle {
-            font-family: 'Inter', sans-serif;
-            font-size: 12px;
-            letter-spacing: 3px;
-            color: #b87333;
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        .form-group label {
-            display: block;
-            font-family: 'Inter', sans-serif;
-            font-size: 12px;
-            letter-spacing: 2px;
-            color: #b87333;
-            margin-bottom: 8px;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid #8b5a2b;
-            border-radius: 6px;
-            color: #e8ddc3;
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #ffd966;
-            box-shadow: 0 0 10px rgba(255, 217, 102, 0.3);
-            background: rgba(0, 0, 0, 0.8);
-        }
-
-        .form-group textarea {
-            min-height: 150px;
-            resize: vertical;
-        }
-
-        .form-group input[type="file"] {
-            padding: 8px;
-            background: rgba(0, 0, 0, 0.4);
-        }
-
-        .form-help {
-            display: block;
-            font-size: 11px;
-            color: #8b5a2b;
-            margin-top: 5px;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .bounty-input-wrapper {
-            position: relative;
-        }
-
-        .bounty-input-wrapper::after {
-            content: "белли";
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #b87333;
-            font-family: 'Inter', sans-serif;
-            font-size: 12px;
-        }
-
-        .bounty-input-wrapper input {
-            padding-right: 50px;
-        }
-
-        .form-actions {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-top: 35px;
-        }
-
-        .submit-btn,
-        .cancel-btn {
-            padding: 12px 30px;
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
-            letter-spacing: 2px;
-            border: none;
-            cursor: pointer;
-            border-radius: 6px;
-            text-decoration: none;
-            display: inline-block;
-            transition: all 0.3s ease;
-        }
-
-        .submit-btn {
-            background: linear-gradient(135deg, #b87333 0%, #8b5a2b 100%);
-            color: #fff;
-        }
-
-        .submit-btn:hover {
-            background: linear-gradient(135deg, #c9772e 0%, #9b6a3b 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(184, 115, 51, 0.4);
-        }
-
-        .cancel-btn {
-            background: rgba(139, 69, 19, 0.3);
-            color: #e8ddc3;
-            border: 1px solid #8b5a2b;
-            text-align: center;
-        }
-
-        .cancel-btn:hover {
-            background: rgba(139, 69, 19, 0.5);
-            transform: translateY(-2px);
-        }
-
-        .preview-section {
-            margin-top: 20px;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .preview-section img {
-            max-width: 100%;
-            max-height: 200px;
-            border-radius: 6px;
-            border: 1px solid #8b5a2b;
-        }
-
-        .required-field::after {
-            content: "*";
-            color: #ff6b6b;
-            margin-left: 4px;
-        }
-
-        @media (max-width: 768px) {
-            .post-form-card {
-                padding: 20px;
-            }
-
-            .form-actions {
-                flex-direction: column;
-            }
-
-            .form-title h1 {
-                font-size: 28px;
-            }
-        }
+        .form-container { max-width: 800px; margin: 40px auto; padding: 20px; }
+        .post-form-card { background: linear-gradient(135deg, rgba(26,20,15,0.95), rgba(20,15,10,0.98)); border: 2px solid #8b5a2b; border-radius: 15px; padding: 40px; }
+        .form-title h1 { font-family: 'Playfair Display', serif; font-size: 36px; color: #ffd966; text-align: center; }
+        .form-group { margin-bottom: 25px; }
+        .form-group label { display: block; font-family: 'Inter', sans-serif; font-size: 12px; letter-spacing: 2px; color: #b87333; margin-bottom: 8px; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px; background: rgba(0,0,0,0.6); border: 1px solid #8b5a2b; border-radius: 6px; color: #e8ddc3; }
+        .form-group textarea { min-height: 150px; }
+        .form-actions { display: flex; gap: 20px; justify-content: center; margin-top: 35px; }
+        .submit-btn, .cancel-btn { padding: 12px 30px; font-family: 'Inter', sans-serif; border-radius: 6px; text-decoration: none; }
+        .submit-btn { background: #b87333; color: white; border: none; cursor: pointer; }
+        .cancel-btn { background: rgba(139,69,19,0.3); color: #e8ddc3; border: 1px solid #8b5a2b; }
+        .preview-section { margin-top: 20px; text-align: center; }
+        .preview-section img { max-width: 100%; max-height: 200px; border-radius: 6px; }
     </style>
 </head>
 <body>
     {% include 'nob/navbar.html' %}
 
+    {% if user.is_authenticated and user.profile.role in 'official admin' %}
     <div class="form-container">
-        <div class="archive-decoration">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-
         <div class="post-form-card">
             <div class="form-title">
                 <h1>НОВЫЙ РОЗЫСКНОЙ ЛИСТ</h1>
-                <div class="title-ornament">
-                    <span>☠</span>
-                    <span>⚓</span>
-                    <span>☠</span>
-                </div>
-                <p class="subtitle">ЗАПОЛНИ ВСЕ ПОЛЯ О ПРЕСТУПНИКЕ</p>
+                <div class="title-ornament">☠ ⚓ ☠</div>
             </div>
 
-            <form method="post" enctype="multipart/form-data" id="postForm">
+            <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
 
                 {% for field in form %}
                 <div class="form-group">
-                    <label for="{{ field.id_for_label }}" {% if field.field.required %}class="required-field"{% endif %}>
-                        {{ field.label|upper }}
-                    </label>
-
-                    {% if field.name == 'bounty' %}
-                        <div class="bounty-input-wrapper">
-                            {{ field }}
-                        </div>
-                    {% elif field.name == 'content' %}
-                        {{ field }}
-                        <span class="form-help">Опишите преступления, особые приметы и последнее место появления</span>
-                    {% elif field.name == 'image' %}
-                        {{ field }}
-                        <span class="form-help">Загрузите изображение преступника (JPG, PNG)</span>
-                        <div class="preview-section" id="imagePreview" style="display: none;">
-                            <p>Предпросмотр:</p>
-                            <img id="previewImg" src="#" alt="Предпросмотр">
-                        </div>
-                    {% else %}
-                        {{ field }}
-                    {% endif %}
-
+                    <label for="{{ field.id_for_label }}">{{ field.label|upper }}</label>
+                    {{ field }}
                     {% if field.help_text %}
                         <span class="form-help">{{ field.help_text }}</span>
                     {% endif %}
-
                     {% if field.errors %}
-                        <div class="form-errors">
-                            {% for error in field.errors %}
-                                <span class="error-message">{{ error }}</span>
-                            {% endfor %}
-                        </div>
+                        <div class="form-errors" style="color: #ff6b6b; font-size: 12px;">{{ field.errors }}</div>
                     {% endif %}
                 </div>
                 {% endfor %}
 
                 <div class="form-actions">
-                    <button type="submit" class="submit-btn">СОЗДАТЬ РОЗЫСКНОЙ ЛИСТ</button>
+                    <button type="submit" class="submit-btn">СОЗДАТЬ РОЗЫСК</button>
                     <a href="{% url 'basepage' %}" class="cancel-btn">ОТМЕНА</a>
                 </div>
             </form>
         </div>
-
-        <footer class="archive-footer">
-            <div class="footer-line"></div>
-            <p>Бюро морской разведки • Все права защищены • Эпоха великих пиратов</p>
-            <div class="footer-line"></div>
-        </footer>
     </div>
+    {% else %}
+    <div class="form-container" style="text-align: center;">
+        <p>У вас нет прав для создания розыска. Только сотрудники организаций могут создавать объявления.</p>
+        <a href="{% url 'basepage' %}" class="cancel-btn">НА ГЛАВНУЮ</a>
+    </div>
+    {% endif %}
 
     <script>
-        // Предпросмотр изображения
         const imageInput = document.querySelector('input[type="file"]');
-        const previewSection = document.getElementById('imagePreview');
-        const previewImg = document.getElementById('previewImg');
-
         if (imageInput) {
-            imageInput.addEventListener('change', function() {
-                const file = this.files[0];
+            imageInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
                 if (file) {
                     const reader = new FileReader();
-                    reader.onload = function(e) {
-                        previewImg.src = e.target.result;
-                        previewSection.style.display = 'block';
+                    reader.onload = function(e2) {
+                        let oldPreview = document.getElementById('previewImg');
+                        if (!oldPreview) {
+                            const previewDiv = document.createElement('div');
+                            previewDiv.className = 'preview-section';
+                            previewDiv.id = 'imagePreview';
+                            previewDiv.innerHTML = '<p>Предпросмотр:</p><img id="previewImg" src="#">';
+                            imageInput.parentNode.appendChild(previewDiv);
+                            oldPreview = document.getElementById('previewImg');
+                        }
+                        oldPreview.src = e2.target.result;
                     }
                     reader.readAsDataURL(file);
-                } else {
-                    previewSection.style.display = 'none';
-                    previewImg.src = '#';
                 }
             });
         }

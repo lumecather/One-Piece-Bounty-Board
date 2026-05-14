@@ -5,12 +5,14 @@ from django.urls import reverse_lazy
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .serializers import PostSerializer, CommentSerializer, PirateProfileSerializer
 from .permissions import IsAuthorOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, permissions, filters
 from .tasks import send_welcome_email
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class PostListView(ListView):
@@ -36,10 +38,11 @@ class PostDetailView(DetailView):
         if not request.user.is_authenticated:
             return redirect('login')
         self.object = self.get_object()
-        form = CommentForm(request.POST)
+        form = CommentForm(request.POST, request.FILES)
         if form.is_valid():
             comment = form.save(commit=False)
             comment.post = self.object
+            comment.author = request.user
             comment.save()
             return redirect('post_detail', pk=self.object.pk)
         else:
@@ -48,12 +51,15 @@ class PostDetailView(DetailView):
             return self.render_to_response(context)
 
 
-class PostCreateView(LoginRequiredMixin, CreateView):
+class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     login_url = '/accounts/login/'
     model = Post
     form_class = PostForm
     template_name = 'nob/post_form.html'
     success_url = reverse_lazy('basepage')
+
+    def test_func(self):
+        return hasattr(self.request.user, 'profile') and self.request.user.profile.role in ['official', 'admin']
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -94,7 +100,7 @@ class ProfileEditView(LoginRequiredMixin, UpdateView):
     login_url = '/accounts/login/'
     model = PirateProfile
     template_name = 'nob/profile_edit.html'
-    fields = ['bounty', 'crew', 'devil_fruit', 'image', 'class1', 'status']
+    fields = ['image']
     context_object_name = 'profile'
 
     def get_object(self):
@@ -169,3 +175,14 @@ class PirateProfileViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_permissions(self):
         return [permissions.AllowAny()]
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        PirateProfile.objects.get_or_create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    if hasattr(instance, 'profile'):
+        instance.profile.save()
