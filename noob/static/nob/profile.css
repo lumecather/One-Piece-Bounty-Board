@@ -383,3 +383,305 @@
         align-items: flex-start;
     }
 }
+
+/* ========== ПОСТЫ ОРГАНИЗАЦИИ ========== */
+.org-posts-section {
+    margin-top: 50px;
+    background: linear-gradient(135deg, rgba(26, 20, 15, 0.9) 0%, rgba(20, 15, 10, 0.95) 100%);
+    border: 2px solid #8b5a2b;
+    border-radius: 15px;
+    padding: 30px;
+}
+
+.org-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #b87333;
+}
+
+.org-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: #ffd966;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.org-icon {
+    font-size: 32px;
+}
+
+.org-stats {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    color: #b87333;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+
+.org-posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 25px;
+}
+
+.org-post-card {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid #8b5a2b;
+    border-radius: 10px;
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.org-post-card:hover {
+    transform: translateY(-5px);
+    border-color: #ffd966;
+    box-shadow: 0 5px 20px rgba(255, 217, 102, 0.2);
+}
+
+.org-post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #8b5a2b;
+}
+
+.org-post-author {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: #ffd966;
+}
+
+.org-post-author strong {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 3px;
+}
+
+.post-date {
+    display: block;
+    font-size: 10px;
+    color: #b87333;
+    margin-top: 3px;
+}
+
+.bounty-mini {
+    background: #2c2418;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-family: 'Playfair Display', serif;
+    font-weight: bold;
+    color: #ffd966;
+    font-size: 14px;
+    border: 1px solid #b87333;
+    white-space: nowrap;
+}
+
+.org-post-title {
+    margin: 15px 0;
+}
+
+.org-post-title a {
+    color: #e8ddc3;
+    text-decoration: none;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 600;
+    transition: color 0.3s ease;
+    display: block;
+    line-height: 1.3;
+}
+
+.org-post-title a:hover {
+    color: #ffd966;
+    text-decoration: underline;
+}
+
+.org-post-excerpt {
+    color: #c4b59a;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+.org-post-image {
+    margin: 15px 0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.org-post-image img {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+.org-post-image img:hover {
+    transform: scale(1.02);
+}
+
+.org-post-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #8b5a2b;
+}
+
+.comment-count {
+    color: #b87333;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.read-more {
+    color: #ffd966;
+    text-decoration: none;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s ease;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+.read-more:hover {
+    color: #fff;
+    background: rgba(184, 115, 51, 0.3);
+    transform: translateX(3px);
+}
+
+.no-posts-message {
+    text-align: center;
+    padding: 60px 40px;
+    color: #b87333;
+    font-family: 'Inter', sans-serif;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    font-size: 16px;
+}
+
+.no-posts-message p {
+    margin: 0;
+}
+
+/* Стили для иконок в статистике */
+.org-stats span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+    .org-posts-section {
+        padding: 20px;
+        margin-top: 30px;
+    }
+
+    .org-posts-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .org-title {
+        font-size: 20px;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .org-icon {
+        font-size: 24px;
+    }
+
+    .org-stats {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .org-post-card {
+        padding: 15px;
+    }
+
+    .org-post-title a {
+        font-size: 18px;
+    }
+
+    .org-post-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .bounty-mini {
+        align-self: flex-start;
+    }
+
+    .org-post-footer {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .no-posts-message {
+        padding: 40px 20px;
+        font-size: 14px;
+    }
+}
+
+/* Анимация появления */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.org-post-card {
+    animation: fadeInUp 0.5s ease forwards;
+    opacity: 0;
+}
+
+.org-post-card:nth-child(1) { animation-delay: 0.1s; }
+.org-post-card:nth-child(2) { animation-delay: 0.2s; }
+.org-post-card:nth-child(3) { animation-delay: 0.3s; }
+.org-post-card:nth-child(4) { animation-delay: 0.4s; }
+.org-post-card:nth-child(5) { animation-delay: 0.5s; }
+.org-post-card:nth-child(6) { animation-delay: 0.6s; }
+
+/* Стилизация скроллбара для секции (опционально) */
+.org-posts-grid::-webkit-scrollbar {
+    width: 8px;
+}
+
+.org-posts-grid::-webkit-scrollbar-track {
+    background: rgba(139, 69, 19, 0.3);
+    border-radius: 10px;
+}
+
+.org-posts-grid::-webkit-scrollbar-thumb {
+    background: #b87333;
+    border-radius: 10px;
+}
+
+.org-posts-grid::-webkit-scrollbar-thumb:hover {
+    background: #ffd966;
+}

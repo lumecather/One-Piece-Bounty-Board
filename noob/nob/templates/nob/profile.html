@@ -72,7 +72,61 @@
                 {% endif %}
             </div>
         </div>
+        {% if organization_name %}
+        <div class="org-posts-section">
+            <div class="org-header">
+                <h3 class="org-title">
+                    <span class="org-icon">🏴‍☠️</span>
+                    ПОСТЫ ОРГАНИЗАЦИИ: {{ organization_name }}
+                    <span class="org-icon">🏴‍☠️</span>
+                </h3>
+                <div class="org-stats">
+                    <span>📊 {{ org_posts_count }} постов</span>
+                    <span>👥 {{ org_members_count }} участников</span>
+                </div>
+            </div>
 
+            {% if org_posts %}
+                <div class="org-posts-grid">
+                    {% for post in org_posts %}
+                        <div class="org-post-card">
+                            <div class="org-post-header">
+                                <div class="org-post-author">
+                                    <strong>{{ post.author.username }}</strong>
+                                    <span class="post-date">{{ post.date|date:"d.m.Y" }}</span>
+                                </div>
+                                <div class="bounty-mini">{{ post.bounty }}</div>
+                            </div>
+
+                            <h4 class="org-post-title">
+                                <a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a>
+                                {% if user.is_authenticated and user.profile.organization and post.author.profile.organization == user.profile.organization %}
+                                <a href="{% url 'post_edit' post.pk %}" class="edit-icon-small" title="Редактировать пост">✎</a>
+                                {% endif %}
+                            </h4>
+
+                            <p class="org-post-excerpt">{{ post.content|truncatewords:30 }}</p>
+
+                            {% if post.image %}
+                                <div class="org-post-image">
+                                    <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                                </div>
+                            {% endif %}
+
+                            <div class="org-post-footer">
+                                <span class="comment-count">💬 {{ post.comments.count }} комментариев</span>
+                                <a href="{% url 'post_detail' post.pk %}" class="read-more">Читать →</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="no-posts-message">
+                    <p>В этой организации пока нет постов.</p>
+                </div>
+            {% endif %}
+        </div>
+        {% endif %}
         <footer class="archive-footer">
             <div class="footer-line"></div>
             <p>Бюро морской разведки • Все права защищены • Эпоха великих пиратов</p>

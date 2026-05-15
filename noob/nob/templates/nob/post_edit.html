@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Редактировать пост | {{ post.title }}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'nob/style.css' %}">
+    <link rel="stylesheet" href="{% static 'nob/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'nob/profile.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        .edit-form-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: linear-gradient(135deg, rgba(26, 20, 15, 0.95) 0%, rgba(20, 15, 10, 0.98) 100%);
+            border: 2px solid #8b5a2b;
+            border-radius: 15px;
+            padding: 40px;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        .form-group label {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            letter-spacing: 2px;
+            color: #b87333;
+            margin-bottom: 10px;
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #8b5a2b;
+            border-radius: 6px;
+            color: #e8ddc3;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 16px;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #ffd966;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .checkbox-group input {
+            width: auto;
+        }
+        .auto-settings {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 3px solid #b87333;
+        }
+        .auto-settings h3 {
+            color: #ffd966;
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 20px;
+        }
+        .form-actions {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .submit-btn {
+            background: linear-gradient(135deg, #b87333 0%, #8b5a2b 100%);
+            color: #fff;
+            padding: 12px 30px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 2px;
+        }
+        .cancel-btn {
+            background: rgba(139, 69, 19, 0.3);
+            color: #e8ddc3;
+            padding: 12px 30px;
+            text-decoration: none;
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+        }
+        .current-image {
+            margin-top: 10px;
+        }
+        .current-image img {
+            max-width: 200px;
+            border-radius: 8px;
+        }
+        .help-text {
+            font-size: 11px;
+            color: #8b5a2b;
+            margin-top: 5px;
+        }
+        h1 {
+            color: #ffd966;
+            font-family: 'Playfair Display', serif;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    {% include 'nob/navbar.html' %}
+
+    <div class="edit-form-container">
+        <h1>✎ РЕДАКТИРОВАНИЕ РОЗЫСКНОГО ЛИСТА</h1>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="{{ form.title.id_for_label }}">ЗАГОЛОВОК</label>
+                {{ form.title }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.content.id_for_label }}">ОПИСАНИЕ</label>
+                {{ form.content }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.image.id_for_label }}">ИЗОБРАЖЕНИЕ</label>
+                {{ form.image }}
+                {% if post.image %}
+                <div class="current-image">
+                    <p>Текущее изображение:</p>
+                    <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.bounty.id_for_label }}">НАГРАДА (белли)</label>
+                {{ form.bounty }}
+            </div>
+
+            <div class="auto-settings">
+                <h3>⚙️ АВТОМАТИЧЕСКОЕ ПОДНЯТИЕ НАГРАДЫ</h3>
+
+                <div class="form-group checkbox-group">
+                    {{ form.auto_enabled }}
+                    <label for="{{ form.auto_enabled.id_for_label }}">Включить автоматическое поднятие баунти</label>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.auto_percent.id_for_label }}">ПРОЦЕНТ ПОДНЯТИЯ</label>
+                    {{ form.auto_percent }}
+                    <div class="help-text">На сколько % увеличивать награду каждый раз</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.auto_interval.id_for_label }}">ИНТЕРВАЛ (ДНИ)</label>
+                    {{ form.auto_interval }}
+                    <div class="help-text">Как часто поднимать награду</div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="submit-btn">💾 СОХРАНИТЬ</button>
+                <a href="{% url 'post_detail' post.pk %}" class="cancel-btn">❌ ОТМЕНА</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

@@ -25,13 +25,19 @@
 
         <article class="post-detail">
             <header class="post-detail-header">
-                <h1 class="post-detail-title">{{ post.title }}</h1>
-                <div class="title-ornament">
-                    <span>☠</span>
-                    <span>⚓</span>
-                    <span>☠</span>
-                </div>
-            </header>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h1 class="post-detail-title">{{ post.title }}</h1>
+            {% if user.is_authenticated and user.profile.organization and post.author.profile.organization == user.profile.organization %}
+                <a href="{% url 'post_edit' post.pk %}" class="edit-icon-large" title="Редактировать пост" style="background: #b87333; color: #fff; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-family: 'Inter', sans-serif; margin-left: 20px;">
+                    ✎ РЕДАКТИРОВАТЬ
+                </a>
+            {% endif %}
+        </div>
+        <div class="title-ornament">
+            <span>☠</span>
+            <span>⚓</span>
+            <span>☠</span>
+        </div>
 
             <!-- Блок с наградой -->
             <div class="detail-bounty-block">

@@ -1,6 +1,6 @@
-from .models import Post, Comment, PirateProfile
+from .models import Post, Comment, PirateProfile, PostBountyAuto
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
-from .forms import PostForm, CommentForm
+from .forms import PostForm, CommentForm, PostEditForm
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
@@ -13,6 +13,7 @@ from rest_framework import viewsets, permissions, filters
 from .tasks import send_welcome_email
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.contrib import messages
 
 
 class PostListView(ListView):
@@ -49,6 +50,31 @@ class PostDetailView(DetailView):
             context = self.get_context_data()
             context['comment_form'] = form
             return self.render_to_response(context)
+
+
+class PostEditView(LoginRequiredMixin, UpdateView):
+    model = Post
+    form_class = PostEditForm
+    template_name = 'nob/post_edit.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        post = self.get_object()
+        user_org = request.user.profile.organization if hasattr(request.user, 'profile') else None
+        post_org = post.author.profile.organization if hasattr(post.author, 'profile') else None
+
+        # Проверка: своя организация
+        if not user_org or not post_org or user_org != post_org:
+            messages.error(request, 'Вы можете редактировать только посты своей организации')
+            return redirect('post_detail', pk=post.pk)
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse_lazy('post_detail', kwargs={'pk': self.object.pk})
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Пост обновлен!')
+        return super().form_valid(form)
 
 
 class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
@@ -93,6 +119,24 @@ class ProfileView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['can_edit'] = self.get_object().user == self.request.user
+
+        profile = self.get_object()
+
+        if profile.organization:
+            users_in_org = PirateProfile.objects.filter(
+                organization=profile.organization
+            ).values_list('user', flat=True)
+
+            org_posts = Post.objects.filter(
+                author_id__in=users_in_org
+            ).order_by('-date')
+
+            context['org_posts'] = org_posts
+            context['organization_name'] = profile.organization
+        else:
+            context['org_posts'] = []
+            context['organization_name'] = None
+
         return context
 
 
@@ -182,7 +226,14 @@ def create_user_profile(sender, instance, created, **kwargs):
     if created:
         PirateProfile.objects.get_or_create(user=instance)
 
+
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     if hasattr(instance, 'profile'):
         instance.profile.save()
+
+
+@receiver(post_save, sender=Post)
+def create_bounty_auto(sender, instance, created, **kwargs):
+    if created:
+        PostBountyAuto.objects.create(post=instance)

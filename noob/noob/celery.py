@@ -8,13 +8,18 @@ app = Celery('nob')
 
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
-# Автоматически находим задачи в приложениях
 app.autodiscover_tasks()
 
 app.conf.beat_schedule = {
-    'increase-bounties-every-sunday': {
-        'task': 'nob.tasks.increase_bounties',
-        # 'schedule': crontab(hour=9, minute=0, day_of_week='sunday'),  # каждое воскресенье в 9:00
-        'schedule': crontab(minute='*/1'),  # для теста: каждую минуту
+    'check-all-posts-bounties': {
+        'task': 'nob.tasks.check_all_posts_bounties',
+        'schedule': crontab(hour=0, minute=0),  # каждый день в 00:00
+        # 'schedule': crontab(minute='*/1'),  # для теста: каждую минуту
     },
+
+    # Тестовая задача для проверки (раскомментировать для теста)
+    # 'test-task': {
+    #     'task': 'nob.tasks.test_task',
+    #     'schedule': crontab(minute='*/5')
+    # },
 }
