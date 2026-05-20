@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from PIL import Image
 
 
 class Post(models.Model):
@@ -14,6 +15,20 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['date']),
+            models.Index(fields=['author']),
+        ]
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.image:
+            img = Image.open(self.image.path)
+            if img.height > 600 or img.width > 600:
+                img.thumbnail((600, 600))
+                img.save(self.image.path)
 
 
 class PostBountyAuto(models.Model):
@@ -37,6 +52,14 @@ class Comment(models.Model):
     def __str__(self):
         return f'Комментарий от {self.author} к {self.post}'
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.image:
+            img = Image.open(self.image.path)
+            if img.height > 600 or img.width > 600:
+                img.thumbnail((600, 600))
+                img.save(self.image.path)
+
 
 class PirateProfile(models.Model):
     class Role(models.TextChoices):
@@ -53,6 +76,14 @@ class PirateProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.username} — {self.get_role_display()}"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.image:
+            img = Image.open(self.image.path)
+            if img.height > 600 or img.width > 600:
+                img.thumbnail((600, 600))
+                img.save(self.image.path)
 
 
 @receiver(post_save, sender=User)
