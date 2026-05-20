@@ -156,41 +156,32 @@ class ProfileEditView(LoginRequiredMixin, UpdateView):
 
 class PostViewSet(viewsets.ModelViewSet):
     """
-    API для работы с постами (розыскными объявлениями)
+    API для постов (розыскных объявлений).
     """
-    queryset = Post.objects.all().select_related('author').prefetch_related('comments')
+    queryset = Post.objects.all().select_related('author').prefetch_related('comments', 'bounty_auto')
     serializer_class = PostSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['author__username', 'date']  # фильтр по автору и дате
-    search_fields = ['title', 'content']  # поиск по заголовку и тексту
-    ordering_fields = ['date', 'title']  # сортировка
-    ordering = ['-date']  # по умолчанию: новые сверху
+    filterset_fields = ['author__username', 'date']
+    search_fields = ['title', 'content']
+    ordering_fields = ['date', 'title', 'bounty']  # добавил сортировку по награде
+    ordering = ['-date']
 
     def get_permissions(self):
-        """
-        Назначаем права доступа в зависимости от действия
-        """
         if self.action == 'create':
-            # Создать пост может только авторизованный
             return [permissions.IsAuthenticated()]
         elif self.action in ['update', 'partial_update', 'destroy']:
-            # Изменить/удалить может только автор
             return [permissions.IsAuthenticated(), IsAuthorOrReadOnly()]
-        # Список и детальная страница — всем
         return [permissions.AllowAny()]
 
     def perform_create(self, serializer):
-        """
-        При создании поста автоматически подставляем автора
-        """
         serializer.save(author=self.request.user)
 
 
 class CommentViewSet(viewsets.ModelViewSet):
     """
-    API для комментариев
+    API для комментариев.
     """
-    queryset = Comment.objects.all()
+    queryset = Comment.objects.all().select_related('author', 'post')
     serializer_class = CommentSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['post', 'author']
@@ -198,24 +189,24 @@ class CommentViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action == 'create':
             return [permissions.IsAuthenticated()]
+        elif self.action in ['update', 'partial_update', 'destroy']:
+            return [permissions.IsAuthenticated(), IsAuthorOrReadOnly()]
         return [permissions.AllowAny()]
 
     def perform_create(self, serializer):
-        """
-        При создании комментария можно указать пост из данных
-        """
-        serializer.save()
+        # Автор всегда текущий пользователь, пост можно передать в данных
+        serializer.save(author=self.request.user)
 
 
 class PirateProfileViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    API для профилей пиратов (только чтение)
+    API для профилей (только чтение).
     """
     queryset = PirateProfile.objects.all().select_related('user')
     serializer_class = PirateProfileSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['crew', 'devil_fruit']
-    search_fields = ['user__username', 'crew']
+    filterset_fields = ['role', 'organization']  # актуальные поля
+    search_fields = ['user__username', 'organization']  # поиск по нику или организации
 
     def get_permissions(self):
         return [permissions.AllowAny()]
