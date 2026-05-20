@@ -83,13 +83,11 @@ WSGI_APPLICATION = 'noob.wsgi.application'
 
 import dj_database_url
 
-
 DATABASES = {
     'default': dj_database_url.config(
         conn_max_age=600
     )
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -167,3 +165,28 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'UTC'
+
+# ---------- Надёжность ----------
+# Подтверждение задачи ПОСЛЕ выполнения (если воркер упал – задача вернётся в очередь)
+CELERY_TASK_ACKS_LATE = True
+# Задача будет перезапущена, если воркер аварийно завершился
+CELERY_TASK_REJECT_ON_WORKER_LOST = True
+# Отслеживать состояние STARTED (для мониторинга)
+CELERY_TASK_TRACK_STARTED = True
+# Параметры повторов по умолчанию (можно переопределить в каждой задаче)
+CELERY_TASK_DEFAULT_RETRY_DELAY = 60  # 1 минута
+CELERY_TASK_MAX_RETRIES = 3
+# Не удалять задачу из очереди, пока она не подтверждена (ACK)
+CELERY_TASK_ACKS_ON_FAILURE_OR_TIMEOUT = True
+
+# Ограничение времени выполнения (уже есть, можно оставить)
+CELERY_TASK_TIME_LIMIT = 1800   # 30 минут
+CELERY_TASK_SOFT_TIME_LIMIT = 1500  # 25 минут
+
+# Параметры транспорта
+CELERY_BROKER_TRANSPORT_OPTIONS = {
+    'visibility_timeout': 43200,  # 12 часов – время, через которое неподтверждённая задача вернётся в очередь
+}
+CELERY_RESULT_BACKEND_TRANSPORT_OPTIONS = {
+    'visibility_timeout': 43200,
+}
