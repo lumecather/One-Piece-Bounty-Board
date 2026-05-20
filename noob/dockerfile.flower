@@ -15,6 +15,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN python manage.py collectstatic --noinput
+EXPOSE 5555
 
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "noob.wsgi:application"]
+CMD celery -A noob flower --port=5555 --basic_auth=admin:flower123
