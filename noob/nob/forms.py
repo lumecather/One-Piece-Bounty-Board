@@ -24,8 +24,8 @@ class PostForm(forms.ModelForm):
 
 class PostEditForm(forms.ModelForm):
     auto_enabled = forms.BooleanField(required=False, label="Автоподнятие баунти")
-    auto_percent = forms.IntegerField(min_value=1, max_value=999999999, label="Процент поднятия", initial=5)
-    auto_interval = forms.IntegerField(min_value=1, max_value=999999999, label="Интервал (дни)", initial=7)
+    auto_percent = forms.IntegerField(min_value=1, max_value=500, label="Процент поднятия", initial=5)
+    auto_interval = forms.IntegerField(min_value=1, max_value=365, label="Интервал (дни)", initial=7)
 
     class Meta:
         model = Post

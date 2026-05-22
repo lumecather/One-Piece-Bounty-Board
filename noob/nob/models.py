@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from PIL import Image
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Post(models.Model):
@@ -11,7 +12,8 @@ class Post(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
     image = models.ImageField(upload_to='posts/', blank=True, null=True)
-    bounty = models.IntegerField()
+    bounty = models.BigIntegerField(default=0,
+                                    validators=[MinValueValidator(0), MaxValueValidator(10_000_000_000)])
     organization = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
@@ -36,8 +38,14 @@ class Post(models.Model):
 class PostBountyAuto(models.Model):
     post = models.OneToOneField('Post', on_delete=models.CASCADE, related_name='bounty_auto')
     enabled = models.BooleanField(default=False)
-    percent = models.IntegerField(default=5, help_text="На сколько % поднимать баунти")
-    interval_days = models.IntegerField(default=7, help_text="Как часто поднимать (дни)")
+    percent = models.IntegerField(
+        default=5,
+        validators=[MinValueValidator(0), MaxValueValidator(500)],
+    )
+    interval_days = models.IntegerField(
+        default=7,
+        validators=[MinValueValidator(1), MaxValueValidator(365)],
+    )
     last_run = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
