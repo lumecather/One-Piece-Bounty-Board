@@ -3,6 +3,7 @@
 <head>
     <title>Редактировать пост | {{ post.title }}</title>
     {% load static %}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="{% static 'nob/style.css' %}">
     <link rel="stylesheet" href="{% static 'nob/navbar.css' %}">
     <link rel="stylesheet" href="{% static 'nob/profile.css' %}">
@@ -165,6 +166,32 @@
                 <button type="submit" class="submit-btn">💾 СОХРАНИТЬ</button>
                 <a href="{% url 'post_detail' post.pk %}" class="cancel-btn">❌ ОТМЕНА</a>
             </div>
+
+            {% if post.pk %}
+            <div style="text-align: center; margin-top: 30px;">
+                <button type="button" class="delete-btn" onclick="confirmDelete()" style="background: #8b0000; color: white; padding: 10px 25px; border-radius: 6px; border: none; cursor: pointer;">
+                    🗑️ УДАЛИТЬ РОЗЫСК
+                </button>
+            </div>
+            <script>
+            function confirmDelete() {
+                Swal.fire({
+                    title: 'Вы уверены?',
+                    text: "Это действие нельзя отменить!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Да, удалить!',
+                    cancelButtonText: 'Отмена'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "{% url 'post_delete' post.pk %}";
+                    }
+                });
+            }
+            </script>
+            {% endif %}
         </form>
     </div>
 </body>

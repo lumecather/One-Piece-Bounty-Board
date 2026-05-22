@@ -100,7 +100,7 @@
 
                             <h4 class="org-post-title">
                                 <a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a>
-                                {% if user.is_authenticated and user.profile.organization and post.author.profile.organization == user.profile.organization %}
+                                {% if user.is_authenticated and user.profile.organization and post.organization == user.profile.organization %}
                                 <a href="{% url 'post_edit' post.pk %}" class="edit-icon-small" title="Редактировать пост">✎</a>
                                 {% endif %}
                             </h4>

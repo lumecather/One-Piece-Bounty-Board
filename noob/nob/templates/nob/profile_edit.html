@@ -5,22 +5,150 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'nob/style.css' %}">
     <link rel="stylesheet" href="{% static 'nob/navbar.css' %}">
-    <link rel="stylesheet" href="{% static 'nob/profile.css' %}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500&family=Playfair+Display:wght@700;900&display=swap"
+          rel="stylesheet">
+    <style>
+        .profile-container {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        .edit-card {
+            background: linear-gradient(135deg, rgba(26,20,15,0.95), rgba(20,15,10,0.98));
+            border: 2px solid #8b5a2b;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .archive-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .archive-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 42px;
+            color: #ffd966;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .archive-subtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            letter-spacing: 3px;
+            color: #b87333;
+        }
+        .title-ornament {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 20px;
+            color: #b87333;
+            margin-top: 10px;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        .form-group label {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            letter-spacing: 2px;
+            color: #b87333;
+            margin-bottom: 8px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid #8b5a2b;
+            border-radius: 6px;
+            color: #e8ddc3;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .form-group input[disabled] {
+            opacity: 0.7;
+            cursor: not-allowed;
+            background: rgba(0,0,0,0.3);
+        }
+        .form-group select option {
+            background: #2a1f15;
+            color: #e8ddc3;
+        }
+        .current-image {
+            margin-top: 15px;
+            text-align: center;
+        }
+        .current-image img {
+            max-width: 120px;
+            border-radius: 10px;
+            border: 2px solid #b87333;
+        }
+        .warning-text {
+            color: #ffb347;
+            font-size: 12px;
+            margin-top: 8px;
+            text-align: center;
+        }
+        .info-text {
+            color: #8b5a2b;
+            font-size: 11px;
+            margin-top: 5px;
+            text-align: center;
+        }
+        .form-actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 35px;
+        }
+        .submit-btn, .cancel-btn {
+            padding: 12px 30px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            letter-spacing: 2px;
+            border-radius: 6px;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+        }
+        .submit-btn {
+            background: #b87333;
+            color: white;
+        }
+        .submit-btn:hover {
+            background: #c9772e;
+            transform: translateY(-2px);
+        }
+        .cancel-btn {
+            background: rgba(139,69,19,0.3);
+            color: #e8ddc3;
+            border: 1px solid #8b5a2b;
+            text-align: center;
+        }
+        .archive-footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 11px;
+            color: #6b5a4b;
+        }
+        .footer-line {
+            width: 100px;
+            height: 1px;
+            background: #8b5a2b;
+            margin: 10px auto;
+        }
+    </style>
 </head>
 <body>
-    {% include 'nob/navbar.html' %}
+{% include 'nob/navbar.html' %}
 
-    <div class="profile-container">
-        <div class="archive-decoration">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-
-        <header class="archive-header">
+<div class="profile-container">
+    <div class="edit-card">
+        <div class="archive-header">
+            <div class="archive-decoration">
+                <span>☠</span><span>⚓</span><span>☠</span>
+            </div>
             <h1 class="archive-title">EDIT</h1>
             <p class="archive-subtitle">РЕДАКТИРОВАНИЕ ПРОФИЛЯ</p>
             <div class="title-ornament">
@@ -28,40 +156,63 @@
                 <span>☠</span>
                 <span>✎</span>
             </div>
-        </header>
-
-        <div class="edit-form-container">
-            <form method="post" enctype="multipart/form-data" class="pirate-form">
-                {% csrf_token %}
-
-                <div class="form-group">
-                    <label for="{{ form.image.id_for_label }}">АВАТАР</label>
-                    {{ form.image }}
-                    {% if profile.image %}
-                        <div class="current-image">
-                            <p>Текущее изображение:</p>
-                            <img src="{{ profile.image.url }}" alt="Текущее фото" class="thumbnail">
-                        </div>
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    <label for="{{ form.organization.id_for_label }}">ОРГАНИЗАЦИЯ</label>
-                    {{ form.organization }}
-                </div>
-
-                <div class="form-actions">
-                    <button type="submit" class="submit-btn">СОХРАНИТЬ</button>
-                    <a href="{% url 'profile_self' %}" class="cancel-btn">ОТМЕНА</a>
-                </div>
-            </form>
         </div>
 
-        <footer class="archive-footer">
-            <div class="footer-line"></div>
-            <p>Бюро морской разведки • Все права защищены • Эпоха великих пиратов</p>
-            <div class="footer-line"></div>
-        </footer>
+        <form method="post" enctype="multipart/form-data" id="profileEditForm">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="{{ form.image.id_for_label }}">АВАТАР</label>
+                {{ form.image }}
+                {% if profile.image %}
+                <div class="current-image">
+                    <img src="{{ profile.image.url }}" alt="Текущий аватар">
+                </div>
+                {% endif %}
+            </div>
+
+            {% if profile.role == 'admin' %}
+            <div class="form-group">
+                <label>РОЛЬ</label>
+                <input type="text" value="Администратор" disabled>
+                <div class="warning-text">🔒 Роль администратора нельзя изменить</div>
+            </div>
+            <div class="form-group">
+                <label>ОРГАНИЗАЦИЯ</label>
+                <input type="text" value="{{ profile.organization }}" disabled>
+                <div class="info-text">Организация администратора</div>
+            </div>
+            {% elif profile.role == 'official' %}
+            <div class="form-group">
+                <label>РОЛЬ</label>
+                <input type="text" value="Сотрудник организации" disabled>
+                <div class="warning-text">🔒 Вы не можете сменить роль. Свяжитесь с администратором.</div>
+            </div>
+            <div class="form-group">
+                <label>ОРГАНИЗАЦИЯ</label>
+                <input type="text" value="{{ profile.organization }}" disabled>
+                <div class="info-text">Организация назначена администратором</div>
+            </div>
+            {% else %}
+            <div class="form-group">
+                <label for="{{ form.role_choice.id_for_label }}">{{ form.role_choice.label }}</label>
+                {{ form.role_choice }}
+            </div>
+            {% endif %}
+
+            <div class="form-actions">
+                <button type="submit" class="submit-btn">СОХРАНИТЬ</button>
+                <a href="{% url 'profile_self' %}" class="cancel-btn">ОТМЕНА</a>
+            </div>
+        </form>
     </div>
+
+    <div class="archive-footer">
+        <div class="footer-line"></div>
+        <p>Бюро морской разведки • Все права защищены • Эпоха великих пиратов</p>
+        <div class="footer-line"></div>
+    </div>
+</div>
+
 </body>
 </html>

@@ -27,7 +27,7 @@
             <header class="post-detail-header">
             <div style="display: flex; justify-content: space-between; align-items: center;">
             <h1 class="post-detail-title">{{ post.title }}</h1>
-            {% if user.is_authenticated and user.profile.organization and post.author.profile.organization == user.profile.organization %}
+            {% if user.is_authenticated and user.profile.organization and post.organization == user.profile.organization %}
                 <a href="{% url 'post_edit' post.pk %}" class="edit-icon-large" title="Редактировать пост" style="background: #b87333; color: #fff; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-family: 'Inter', sans-serif; margin-left: 20px;">
                     ✎ РЕДАКТИРОВАТЬ
                 </a>
@@ -71,7 +71,12 @@
                 <div class="meta-item">
                     <span class="meta-icon">⚓</span>
                     <span class="meta-label">Автор:</span>
-                    <span class="meta-value">{{ post.author.username }}</span>
+                    <span class="meta-value">
+                        <a href="{% url 'profile' post.author.profile.pk %}" class="author-link">{{ post.author.username }}</a>
+                        {% if post.organization %}
+                            <span class="organization-badge">({{ post.organization }})</span>
+                        {% endif %}
+                    </span>
                 </div>
                 <div class="meta-item">
                     <span class="meta-icon">⌛</span>
@@ -107,7 +112,9 @@
                     {% for comment in comments %}
                         <div class="comment-card">
                             <div class="comment-header">
-                                <span class="comment-author">{{ comment.author.username }}</span>
+                                <span class="comment-author">
+                                    <a href="{% url 'profile' comment.author.profile.pk %}" class="author-link">{{ comment.author.username }}</a>
+                                </span>
                                 <span class="comment-date">{{ comment.date|date:"d M Y H:i" }}</span>
                             </div>
 

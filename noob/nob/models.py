@@ -6,12 +6,13 @@ from PIL import Image
 
 
 class Post(models.Model):
-    title = models.CharField(max_length=200)  # заголовок
-    content = models.TextField()  # текст поста
-    date = models.DateTimeField(auto_now_add=True)  # дата создания
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
     image = models.ImageField(upload_to='posts/', blank=True, null=True)
     bounty = models.IntegerField()
+    organization = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
         return self.title
@@ -20,6 +21,7 @@ class Post(models.Model):
         indexes = [
             models.Index(fields=['date']),
             models.Index(fields=['author']),
+            models.Index(fields=['organization']),
         ]
 
     def save(self, *args, **kwargs):

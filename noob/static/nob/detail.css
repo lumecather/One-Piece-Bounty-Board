@@ -506,3 +506,23 @@
         gap: 0.5rem;
     }
 }
+
+.post-meta .author-link,
+.comment-author .author-link {
+    color: var(--bounty-gold);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.post-meta .author-link:hover,
+.comment-author .author-link:hover {
+    color: var(--bounty-gold-dark);
+    text-decoration: underline;
+}
+
+.post-meta .organization-badge {
+    font-size: 0.8rem;
+    color: var(--accent-light);
+    margin-left: 0.5rem;
+}

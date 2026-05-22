@@ -55,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'noob.urls'
@@ -127,6 +128,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 INTERNAL_IPS = [
     '127.0.0.1',
@@ -157,6 +159,7 @@ SIMPLE_JWT = {
 
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/accounts/login/'
 
 # Celery настройки
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
@@ -180,7 +183,7 @@ CELERY_TASK_MAX_RETRIES = 3
 CELERY_TASK_ACKS_ON_FAILURE_OR_TIMEOUT = True
 
 # Ограничение времени выполнения (уже есть, можно оставить)
-CELERY_TASK_TIME_LIMIT = 1800   # 30 минут
+CELERY_TASK_TIME_LIMIT = 1800  # 30 минут
 CELERY_TASK_SOFT_TIME_LIMIT = 1500  # 25 минут
 
 # Параметры транспорта
@@ -190,3 +193,5 @@ CELERY_BROKER_TRANSPORT_OPTIONS = {
 CELERY_RESULT_BACKEND_TRANSPORT_OPTIONS = {
     'visibility_timeout': 43200,
 }
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

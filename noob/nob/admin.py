@@ -9,12 +9,12 @@ class PirateProfileAdmin(admin.ModelAdmin):
 
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'author', 'date', 'has_image')
-    list_filter = ('author', 'date')
+    list_display = ('id', 'title', "organization", 'author', 'date', 'has_image')
+    list_filter = ('author', 'date', "organization")
     search_fields = ('title', 'content')
-    list_editable = ('title',)  # можно редактировать прямо в списке
-    list_per_page = 10  # пагинация в админке
-    date_hierarchy = 'date'  # навигация по датам
+    list_editable = ('title',)
+    list_per_page = 10
+    date_hierarchy = 'date'
 
     def has_image(self, obj):
         return bool(obj.image)

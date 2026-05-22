@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post, PostBountyAuto
+from .models import Post, PostBountyAuto, PirateProfile
 from .models import Comment
 
 
@@ -24,8 +24,8 @@ class PostForm(forms.ModelForm):
 
 class PostEditForm(forms.ModelForm):
     auto_enabled = forms.BooleanField(required=False, label="Автоподнятие баунти")
-    auto_percent = forms.IntegerField(min_value=1, max_value=100, label="Процент поднятия", initial=5)
-    auto_interval = forms.IntegerField(min_value=1, max_value=30, label="Интервал (дни)", initial=7)
+    auto_percent = forms.IntegerField(min_value=1, max_value=999999999, label="Процент поднятия", initial=5)
+    auto_interval = forms.IntegerField(min_value=1, max_value=999999999, label="Интервал (дни)", initial=7)
 
     class Meta:
         model = Post
@@ -54,3 +54,24 @@ class PostEditForm(forms.ModelForm):
             auto.interval_days = self.cleaned_data['auto_interval']
             auto.save()
         return post
+
+
+class ProfileEditForm(forms.ModelForm):
+    role_choice = forms.ChoiceField(
+        choices=[('just_user', 'user'), ('hunter', 'Охотник за головами'), ("pirate", "pirate")],
+        required=False,
+        label='Роль'
+    )
+
+    class Meta:
+        model = PirateProfile
+        fields = ['image', 'role_choice']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.role in ['admin', 'official']:
+            self.fields['role_choice'].widget.attrs['disabled'] = True
+            self.fields['role_choice'].help_text = 'Роль нельзя изменить'
+        else:
+            self.fields['role_choice'].initial = self.instance.role if self.instance.role in ['just_userr', 'hunter',
+                                                                                              "pirate"] else 'just_user'

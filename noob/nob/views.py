@@ -1,6 +1,6 @@
 from .models import Post, Comment, PirateProfile, PostBountyAuto
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
-from .forms import PostForm, CommentForm, PostEditForm
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from .forms import PostForm, CommentForm, PostEditForm, ProfileEditForm
 from django.urls import reverse_lazy
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
@@ -62,7 +62,6 @@ class PostEditView(LoginRequiredMixin, UpdateView):
         user_org = request.user.profile.organization if hasattr(request.user, 'profile') else None
         post_org = post.author.profile.organization if hasattr(post.author, 'profile') else None
 
-        # Проверка: своя организация
         if not user_org or not post_org or user_org != post_org:
             messages.error(request, 'Вы можете редактировать только посты своей организации')
             return redirect('post_detail', pk=post.pk)
@@ -89,7 +88,21 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
+        form.instance.organization = self.request.user.profile.organization
         return super().form_valid(form)
+
+
+class PostDeleteView(LoginRequiredMixin, DeleteView):
+    model = Post
+    success_url = reverse_lazy('basepage')
+
+    def get(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+        return redirect(self.success_url)
 
 
 class RegisterView(CreateView):
@@ -118,40 +131,47 @@ class ProfileView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['can_edit'] = self.get_object().user == self.request.user
-
         profile = self.get_object()
 
-        if profile.organization:
-            users_in_org = PirateProfile.objects.filter(
-                organization=profile.organization
-            ).values_list('user', flat=True)
+        context['can_edit'] = profile.user == self.request.user
 
+        if profile.organization:
             org_posts = Post.objects.filter(
-                author_id__in=users_in_org
+                organization=profile.organization
             ).order_by('-date')
 
             context['org_posts'] = org_posts
             context['organization_name'] = profile.organization
         else:
-            context['org_posts'] = []
+            context['org_posts'] = Post.objects.none()
             context['organization_name'] = None
 
         return context
 
 
 class ProfileEditView(LoginRequiredMixin, UpdateView):
-    login_url = '/accounts/login/'
     model = PirateProfile
+    form_class = ProfileEditForm
     template_name = 'nob/profile_edit.html'
-    fields = ['image']
     context_object_name = 'profile'
+    login_url = '/accounts/login/'
+    success_url = reverse_lazy('profile_self')
 
     def get_object(self):
         return get_object_or_404(PirateProfile, user=self.request.user)
 
     def get_success_url(self):
         return reverse_lazy('profile', kwargs={'pk': self.object.pk})
+
+    def form_valid(self, form):
+        profile = form.save(commit=False)
+        role_choice = form.cleaned_data.get('role_choice')
+        if role_choice and profile.role not in ['admin', 'official']:
+            profile.role = role_choice
+            if profile.role != 'official':
+                profile.organization = ''
+        profile.save()
+        return super().form_valid(form)
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -228,3 +248,15 @@ def save_user_profile(sender, instance, **kwargs):
 def create_bounty_auto(sender, instance, created, **kwargs):
     if created:
         PostBountyAuto.objects.create(post=instance)
+
+
+@receiver(post_save, sender=User)
+def create_admin_profile(sender, instance, created, **kwargs):
+    if created and instance.is_superuser:
+        PirateProfile.objects.create(
+            user=instance,
+            role='admin',
+            organization='admins'
+        )
+    elif created:
+        PirateProfile.objects.create(user=instance)

@@ -30,7 +30,6 @@ def send_welcome_email(self, user_email, username):
         raise self.retry(exc=exc)
     except Exception as exc:
         logger.error(f'Неожиданная ошибка при отправке письма {user_email}: {exc}')
-        # Для неожиданных ошибок тоже пробуем повторить
         raise self.retry(exc=exc)
 
 

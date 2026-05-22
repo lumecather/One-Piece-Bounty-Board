@@ -1,24 +1,105 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Вход для пиратов</title>
+    <title>Вход в систему | Морской розыск</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'blog/style.css' %}">
+    <link rel="stylesheet" href="{% static 'nob/style.css' %}">
+    <style>
+        .auth-container {
+            max-width: 450px;
+            margin: 60px auto;
+            padding: 20px;
+        }
+        .auth-card {
+            background: linear-gradient(135deg, rgba(26,20,15,0.95), rgba(20,15,10,0.98));
+            border: 2px solid #8b5a2b;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .auth-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            color: #ffd966;
+            margin-bottom: 10px;
+        }
+        .auth-subtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            letter-spacing: 3px;
+            color: #b87333;
+            margin-bottom: 30px;
+        }
+        .auth-form input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid #8b5a2b;
+            border-radius: 6px;
+            color: #e8ddc3;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .auth-form button {
+            width: 100%;
+            padding: 12px;
+            background: #b87333;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .auth-form button:hover {
+            background: #c9772e;
+            transform: translateY(-2px);
+        }
+        .auth-links {
+            margin-top: 25px;
+            font-size: 14px;
+        }
+        .auth-links a {
+            color: #b87333;
+            text-decoration: none;
+        }
+        .auth-links a:hover {
+            color: #ffd966;
+        }
+        .error-message {
+            color: #ff6b6b;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+    </style>
 </head>
 <body>
-    <h1>⚓ Вход в гавань</h1>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-title">⚓ ВХОД В ГАВАНЬ</div>
+            <div class="auth-subtitle">AUTHORIZED PERSONNEL ONLY</div>
 
-    {% if form.errors %}
-        <p style="color: red;">Неверное имя или пароль. Попробуй ещё, салага!</p>
-    {% endif %}
+            {% if form.errors %}
+                <div class="error-message">❌ Неверное имя или пароль</div>
+            {% endif %}
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Войти</button>
-    </form>
+            <form method="post" class="auth-form">
+                {% csrf_token %}
+                <input type="text" name="username" placeholder="ИМЯ ПИРАТА" autocomplete="off">
+                <input type="password" name="password" placeholder="ПАРОЛЬ">
+                <button type="submit">ВОЙТИ</button>
+            </form>
 
-    <p>Нет аккаунта? <a href="{% url 'register' %}">Зарегистрироваться</a></p>
-    <p><a href="{% url 'basepage' %}">На главную</a></p>
+            <div class="auth-links">
+                <p>Нет аккаунта? <a href="{% url 'register' %}">Зарегистрироваться</a></p>
+                <p><a href="{% url 'basepage' %}">← На главную</a></p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

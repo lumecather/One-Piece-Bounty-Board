@@ -10,4 +10,5 @@ urlpatterns = [
     path('profile/<int:pk>/', views.ProfileView.as_view(), name='profile'),  # чужой профиль
     path('profile/edit/', views.ProfileEditView.as_view(), name='profile_edit'),
     path('post/<int:pk>/edit/', views.PostEditView.as_view(), name='post_edit'),
+    path('post/<int:pk>/delete/', views.PostDeleteView.as_view(), name='post_delete'),
 ]
