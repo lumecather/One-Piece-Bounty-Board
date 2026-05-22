@@ -38,16 +38,14 @@ The project simulates a pirate world where:
 
 | Role | Can create posts | Can edit own posts | Can edit any post | Organization required |
 |------|------------------|--------------------|--------------------|------------------------|
-| **User (Pirate)** | ❌ No | ❌ No | ❌ No | No |
-| **Hunter** | ❌ No | ❌ No | ❌ No | No |
-| **pirate** | ❌ No | ❌ No | ❌ No | No |
+| **User / Pirate / Hunter** | ❌ No | ❌ No | ❌ No | No |
 | **Organization Member (Official)** | ✅ Yes | ✅ Yes | ❌ No | ✅ Yes |
 | **Admin** | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes (auto: "admins") |
 
 ### How Roles Work
 
 1. **New users** register with role "User" by default
-2. **Users can switch** between "Pirate" and "Hunter" freely in profile settings
+2. **Users can switch** between "Pirate", "Hunter" and "User" freely in profile settings
 3. **Organization Member** and **Admin** roles can only be assigned via admin panel
 4. **Admins automatically get** `organization = "admins"`
 5. **Organization members cannot change** their role or organization through the edit form — only admin can modify them
@@ -60,9 +58,13 @@ The project simulates a pirate world where:
 
 ---
 
+## 📝 Post Management
+
+Wanted posters are the core of the platform. Only authorized roles can create, edit, and manage them.
+
 ### Creating a Post
 
-Only **Hunters**, **Organization members**, and **Admins** can create posts.
+Only **Organization members**, and **Admins** can create posts.
 
 **Required fields:**
 - Title
@@ -99,6 +101,19 @@ Each post can have a **BountyAuto** configuration:
 **Logic:**  
 Every Sunday at 9:00 AM, Celery task runs and increases bounties for all `enabled` posts.
 
+⚠️ **Requirements for Auto-Increase:**
+To make this feature work, ensure that **Redis server is running**, and then start the following background tasks in separate terminal windows:
+
+1. **Start Celery Beat** (schedules tasks):
+   ```bash
+   celery -A noob beat --loglevel=info
+   ```
+
+2. **Start Celery Worker** (executes tasks):
+   ```bash
+   celery -A noob worker --loglevel=info
+   ```
+
 ---
 
 ## ⚙️ Auto Bounty Increase (Celery)
@@ -133,7 +148,7 @@ Log in with your **superuser credentials**.
 ```bash
 python manage.py createsuperuser
 ```
-> then go to /admin page
+then go to /admin page
 ## 👑 Admin Panel & User Management
 
 ### ⚙️ What You Can Manage
@@ -212,6 +227,123 @@ python manage.py createsuperuser
 Monitoring
 Celery Flower is included in the plan but not yet configured.
 Logs are available in Celery worker terminal.
+
+---
+
+## 🐳 Deployment & Production
+
+### 🚀 Quick Deployment (Docker)
+
+**Prerequisites:** Docker & Docker Compose installed on your server.
+
+```bash
+# Clone the repository
+git clone https://github.com/lumecather/One-Piece-Bounty-Board.git
+cd One-Piece-Bounty-Board
+
+# Create environment configuration
+cp .env.example .env
+# 📝 Edit .env with your database credentials and allowed hosts
+
+# Build and start containers in background
+docker compose up -d --build
+
+# Apply database migrations
+docker compose exec web python manage.py migrate
+
+# Create admin (superuser) account
+docker compose exec web python manage.py createsuperuser
+
+# Collect static files
+docker compose exec web python manage.py collectstatic --noinput
+```
+
+🌐 Your site will be available at: `http://your-server-ip:8000`
+
+---
+
+### 🔧 Manual Deployment (Without Docker)
+
+1. **Install system dependencies:**
+   ```bash
+   sudo apt update
+   sudo apt install python3-pip nginx postgresql redis
+   ```
+
+2. **Clone & setup virtual environment:**
+   *Follow the same steps as in local development.*
+
+3. **Configure PostgreSQL:**
+   * Create a database and user.
+   * Set your `DATABASE_URL` in the `.env` file.
+
+4. **Prepare assets and database:**
+   ```bash
+   python manage.py collectstatic --noinput
+   python manage.py migrate
+   ```
+
+5. **Configure Gunicorn:**
+   * Set up Gunicorn as a `systemd` service to keep Django running.
+
+6. **Configure Nginx as a reverse proxy:**
+   ```nginx
+   server {
+       listen 80;
+       server_name your-domain.com;
+       
+       location /static/ {
+           alias /path/to/staticfiles/;
+       }
+       
+       location /media/ {
+           alias /path/to/media/;
+       }
+       
+       location / {
+           proxy_pass http://127.0.0.1:8000;
+           proxy_set_header Host $host;
+           proxy_set_header X-Real-IP $remote_addr;
+       }
+   }
+   ```
+
+7. **Set up SSL with Let's Encrypt:**
+   ```bash
+   sudo certbot --nginx -d your-domain.com
+   ```
+
+8. **Start services:**
+   ```bash
+   sudo systemctl start gunicorn
+   sudo systemctl restart nginx
+   ```
+
+---
+
+### 📦 Environment Variables (`.env`)
+
+
+| Variable | Description | Example |
+| :--- | :--- | :--- |
+| **`DEBUG`** | Development mode (*set `False` in production*). | `False` |
+| **`SECRET_KEY`** | Django secret key for cryptographic signing. | `your-secret-key-here` |
+| **`ALLOWED_HOSTS`**| Comma‑separated list of domains or IPs. | `your-domain.com,123.45.67.89` |
+| **`DATABASE_URL`** | PostgreSQL connection string. | `postgres://user:pass@db:5432/dbname` |
+| **`REDIS_URL`** | Redis connection string (required for Celery). | `redis://redis:6379/0` |
+
+---
+
+### ⚠️ Production Checklist
+
+* [ ] Set `DEBUG=False` in your `.env` file.
+* [ ] Generate a brand new, strong `SECRET_KEY`.
+* [ ] Set proper domains/IPs in `ALLOWED_HOSTS`.
+* [ ] Use **PostgreSQL** instead of SQLite.
+* [ ] Enable **HTTPS** via Let's Encrypt (Certbot).
+* [ ] Set up regular database backups.
+* [ ] Configure error logging (Sentry recommended).
+* [ ] Run **Celery worker** and **Beat** as background `systemd` services.
 
 ---
 
