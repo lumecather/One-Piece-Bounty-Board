@@ -133,6 +133,7 @@ Log in with your **superuser credentials**.
 ```bash
 python manage.py createsuperuser
 ```
+> then go to /admin page
 ## 👑 Admin Panel & User Management
 
 ### ⚙️ What You Can Manage
