@@ -9,15 +9,18 @@ Role-based access, background tasks, and production-ready deployment.
 
 ## 📌 Table of Contents
 
-1. [Game Mechanics](#game-mechanics)
-2. [Role System & Permissions](#role-system--permissions)
-3. [Post Management](#post-management)
-4. [Auto Bounty Increase (Celery)](#auto-bounty-increase-celery)
-5. [Admin Panel](#admin-panel)
-6. [Tech Stack](#tech-stack)
-7. [Local Development](#local-development)
-8. [Deployment](#deployment)
-9. [Note on Folder Names](#note-on-folder-names)
+1. [🎮 Game Mechanics](#-game-mechanics)
+2. [👥 Role System & Permissions](#-role-system--permissions)
+3. [📜 Post Management](#-post-management)
+4. [📈 Auto Bounty Increase (Celery)](#-auto-bounty-increase-celery)
+5. [👑 Admin Panel](#-admin-panel)
+6. [✨ Features](#-features)
+7. [🛠️ Tech Stack](#-tech-stack)
+8. [💻 Local Development](#-local-development)
+9. [🐳 Deployment](#-deployment)
+10. [📦 Environment Variables](#-environment-variables)
+11. [⚠️ Production Checklist](#-production-checklist)
+12. [📁 Note on Folder Names](#-note-on-folder-names)
 
 ---
 
