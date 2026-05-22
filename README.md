@@ -82,22 +82,15 @@ Only **Organization members**, and **Admins** can create posts.
 
 ### Editing a Post
 
-- **Author** can edit their own posts
-- **Admin** can edit any post (for moderation)
+- **Admin** can edit any post (in panel)
 - **Organization members** can only edit posts within their organization
-
-### Deleting a Post
-
-- **Author** can delete own posts
-- **Admin** can delete any post
-- Deletion is **permanent** with no confirmation (fast one-click)
 
 ### Auto Bounty Increase
 
 Each post can have a **BountyAuto** configuration:
 
 - `enabled` — toggle auto‑increase on/off
-- `percent` — increase percentage (default 5%, max 100%)
+- `percent` — increase percentage
 - `interval_days` — how often to increase (default 7 days)
 - `last_run` — timestamp of last increase
 
@@ -131,11 +124,6 @@ To make this feature work, ensure that **Redis server is running**, and then sta
      `new_bounty = current_bounty + (current_bounty * percent / 100)`
    - Updates `last_run` to now
    - Saves the post
-
-### Protection Against Integer Overflow
-
-- PostgreSQL `bounty` field uses `BigIntegerField` (max ~9 billion)
-- Task caps bounty at 2 billion to prevent overflow
 
 ---
 
@@ -261,8 +249,6 @@ docker compose exec web python manage.py createsuperuser
 docker compose exec web python manage.py collectstatic --noinput
 ```
 
-🌐 Your site will be available at: `http://your-server-ip:8000`
-
 ---
 
 ### 🔧 Manual Deployment (Without Docker)
@@ -347,7 +333,15 @@ docker compose exec web python manage.py collectstatic --noinput
 * [ ] Set up regular database backups.
 * [ ] Configure error logging (Sentry recommended).
 * [ ] Run **Celery worker** and **Beat** as background `systemd` services.
+* [ ] **Set up Flower for Celery monitoring** (optional but recommended)
+ Flower provides a web interface to monitor your Celery workers and tasks.
 
+  ```bash
+  # Install Flower
+  pip install flower
+
+  # Run as systemd service or Docker container
+  celery -A noob flower --port=5555 --basic_auth=admin:your_strong_password
 ---
 
 > I also want to note that the folders are named noob or nob just for fun because at first I didn't intend it as a serious
