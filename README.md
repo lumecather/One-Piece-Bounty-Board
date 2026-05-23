@@ -230,7 +230,7 @@ Logs are available in Celery worker terminal.
 ```bash
 # Clone the repository
 git clone https://github.com/lumecather/One-Piece-Bounty-Board.git
-cd One-Piece-Bounty-Board
+cd One-Piece-Bounty-Board/noob
 
 # Create environment configuration
 cp .env.example .env
