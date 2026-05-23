@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Новый розыскной лист | Морской розыск</title>
+    <title>New Wanted Poster | Marine Bounty</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'nob/style.css' %}">
     <link rel="stylesheet" href="{% static 'nob/navbar.css' %}">
@@ -29,7 +29,7 @@
     <div class="form-container">
         <div class="post-form-card">
             <div class="form-title">
-                <h1>НОВЫЙ РОЗЫСКНОЙ ЛИСТ</h1>
+                <h1>NEW WANTED POSTER</h1>
                 <div class="title-ornament">☠ ⚓ ☠</div>
             </div>
 
@@ -50,16 +50,16 @@
                 {% endfor %}
 
                 <div class="form-actions">
-                    <button type="submit" class="submit-btn">СОЗДАТЬ РОЗЫСК</button>
-                    <a href="{% url 'basepage' %}" class="cancel-btn">ОТМЕНА</a>
+                    <button type="submit" class="submit-btn">CREATE WANTED POST</button>
+                    <a href="{% url 'basepage' %}" class="cancel-btn">CANCEL</a>
                 </div>
             </form>
         </div>
     </div>
     {% else %}
     <div class="form-container" style="text-align: center;">
-        <p>У вас нет прав для создания розыска. Только сотрудники организаций могут создавать объявления.</p>
-        <a href="{% url 'basepage' %}" class="cancel-btn">НА ГЛАВНУЮ</a>
+        <p>You do not have permission to create a wanted post. Only organization members can create announcements.</p>
+        <a href="{% url 'basepage' %}" class="cancel-btn">BACK TO HOME</a>
     </div>
     {% endif %}
 
@@ -76,7 +76,7 @@
                             const previewDiv = document.createElement('div');
                             previewDiv.className = 'preview-section';
                             previewDiv.id = 'imagePreview';
-                            previewDiv.innerHTML = '<p>Предпросмотр:</p><img id="previewImg" src="#">';
+                            previewDiv.innerHTML = '<p>Preview:</p><img id="previewImg" src="#">';
                             imageInput.parentNode.appendChild(previewDiv);
                             oldPreview = document.getElementById('previewImg');
                         }

@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from .models import Post, Comment, PirateProfile, PostBountyAuto
 
 
-# --- Вспомогательный сериализатор для PostBountyAuto ---
 class PostBountyAutoSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostBountyAuto
@@ -17,7 +16,6 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'email']
 
 
-# 2. Профиль пирата (теперь role, organization, image)
 class PirateProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
 
@@ -26,20 +24,18 @@ class PirateProfileSerializer(serializers.ModelSerializer):
         fields = ['user', 'image', 'role', 'organization']
 
 
-# 3. Комментарий (добавлено поле image, автор только для чтения)
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ['id', 'author', 'text', 'date', 'post', 'image']
-        read_only_fields = ['post', 'author']   # автор назначается во view
+        read_only_fields = ['post', 'author']
 
 
-# 4. Пост (добавлены bounty и вложенный bounty_auto)
 class PostSerializer(serializers.ModelSerializer):
     author_name = serializers.ReadOnlyField(source='author.username')
     comment_count = serializers.IntegerField(source='comments.count', read_only=True)
     comments = CommentSerializer(many=True, read_only=True)
-    bounty_auto = PostBountyAutoSerializer(read_only=True)   # настройки авто‑поднятия
+    bounty_auto = PostBountyAutoSerializer(read_only=True)
 
     class Meta:
         model = Post

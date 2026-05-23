@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Морской розыск</title>
+    <title>Marine Bounty List</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'nob/style.css' %}">
     <link rel="stylesheet" href="{% static 'nob/navbar.css' %}">
@@ -16,7 +16,7 @@
         {% for message in messages %}
             <script>
                 Swal.fire({
-                    title: 'Готово!',
+                    title: 'Success!',
                     text: '{{ message }}',
                     icon: 'success',
                     timer: 2000,
@@ -27,7 +27,6 @@
     {% endif %}
 
     <div class="archive-container">
-        <!-- Декоративный верхний элемент -->
         <div class="archive-decoration">
             <span></span>
             <span></span>
@@ -56,7 +55,7 @@
                         <div class="card-image placeholder">
                             <div class="placeholder-content">
                                 <span class="skull-icon">☠</span>
-                                <span>Изображение отсутствует</span>
+                                <span>No image available</span>
                             </div>
                         </div>
                     {% endif %}
@@ -65,13 +64,12 @@
                         <h2>
                             <a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a>
                             {% if user.is_authenticated and user.profile.organization and post.organization == user.profile.organization %}
-                            <a href="{% url 'post_edit' post.pk %}" class="edit-icon" title="Редактировать пост">✎</a>
+                            <a href="{% url 'post_edit' post.pk %}" class="edit-icon" title="Edit post">✎</a>
                             {% endif %}
                         </h2>
 
-                        <!-- БЛОК С НАГРАДОЙ -->
                         <div class="bounty-block">
-                            <span class="bounty-label">НАГРАДА</span>
+                            <span class="bounty-label">BOUNTY</span>
                             <span class="bounty-value">{{ post.bounty }}</span>
                         </div>
 
@@ -88,22 +86,20 @@
                         <span class="card-date">{{ post.date }}</span>
                     </div>
 
-                    <!-- Декоративный номер плаката -->
                     <div class="post-number">№{{ forloop.counter|stringformat:"03d" }}</div>
                 </article>
             {% empty %}
                 <div class="empty-state">
                     <div class="empty-ornament">☠</div>
-                    <p>Море пусто... пока никого не разыскивают</p>
+                    <p>The sea is empty... no one is being searched for yet</p>
                     <div class="empty-ornament">☠</div>
                 </div>
             {% endfor %}
         </div>
 
-        <!-- Нижний колонтитул в стиле старых документов -->
         <footer class="archive-footer">
             <div class="footer-line"></div>
-            <p>Бюро морской разведки • Все права защищены • Эпоха великих пиратов</p>
+            <p>Marine Intelligence Bureau • All rights reserved • Great Pirate Era</p>
             <div class="footer-line"></div>
         </footer>
     </div>

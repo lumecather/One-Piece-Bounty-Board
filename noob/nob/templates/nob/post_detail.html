@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{ post.title }} | Морской розыск</title>
+    <title>{{ post.title }} | Marine Wanted</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'nob/style.css' %}">
     <link rel="stylesheet" href="{% static 'nob/detail.css' %}">
@@ -19,7 +19,7 @@
 
         <div class="back-button">
             <a href="{% url 'basepage' %}" class="back-link">
-                <span class="back-arrow">←</span> Вернуться к розыскным листам
+                <span class="back-arrow">←</span> Back to Bounty Board
             </a>
         </div>
 
@@ -28,8 +28,8 @@
             <div style="display: flex; justify-content: space-between; align-items: center;">
             <h1 class="post-detail-title">{{ post.title }}</h1>
             {% if user.is_authenticated and user.profile.organization and post.organization == user.profile.organization %}
-                <a href="{% url 'post_edit' post.pk %}" class="edit-icon-large" title="Редактировать пост" style="background: #b87333; color: #fff; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-family: 'Inter', sans-serif; margin-left: 20px;">
-                    ✎ РЕДАКТИРОВАТЬ
+                <a href="{% url 'post_edit' post.pk %}" class="edit-icon-large" title="Alter Wanted Poster" style="background: #b87333; color: #fff; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-family: 'Inter', sans-serif; margin-left: 20px;">
+                    ✎ REDACT
                 </a>
             {% endif %}
         </div>
@@ -39,10 +39,9 @@
             <span>☠</span>
         </div>
 
-            <!-- Блок с наградой -->
             <div class="detail-bounty-block">
-                <span class="bounty-label">НАГРАДА ЗА ПОИМКУ</span>
-                <span class="bounty-value detail-bounty-value">{{ post.bounty|default:"Не указана" }}</span>
+                <span class="bounty-label">BOUNTY</span>
+                <span class="bounty-value detail-bounty-value">{{ post.bounty|default:"Unknown" }}</span>
                 <div class="bounty-decoration">
                     <span>💰</span>
                     <span>💰</span>
@@ -50,7 +49,6 @@
                 </div>
             </div>
 
-            <!-- Изображение поста -->
             {% if post.image %}
                 <div class="detail-image-container">
                     <div class="image-ornament-top"></div>
@@ -61,7 +59,7 @@
                 <div class="detail-image-container placeholder">
                     <div class="placeholder-content large">
                         <span class="skull-icon">☠</span>
-                        <span>Изображение отсутствует</span>
+                        <span>Missing Image</span>
                     </div>
                 </div>
             {% endif %}
@@ -80,7 +78,7 @@
                 </div>
                 <div class="meta-item">
                     <span class="meta-icon">⌛</span>
-                    <span class="meta-label">Дата публикации:</span>
+                    <span class="meta-label">Log Date:</span>
                     <span class="meta-value">{{ post.date|date:"d F Y" }}</span>
                 </div>
             </div>
@@ -104,7 +102,7 @@
             <section class="comments-section">
                 <h2 class="comments-title">
                     <span class="title-icon">⚓</span>
-                    Комментарии
+                    Comments
                     <span class="title-icon">⚓</span>
                 </h2>
 
@@ -135,7 +133,7 @@
                     {% empty %}
                         <div class="empty-comments">
                             <div class="empty-ornament-small">☠</div>
-                            <p>Пока нет комментариев. Будьте первым, кто оставит заметку!</p>
+                            <p>No notes yet. Be the first to leave a tip!</p>
                             <div class="empty-ornament-small">☠</div>
                         </div>
                     {% endfor %}
@@ -145,34 +143,32 @@
                 <div class="comment-form-container">
                     <h3 class="form-title">
                         <span class="form-icon">✍️</span>
-                        Оставить запись в судовом журнале
+                        Note
                     </h3>
 
                     <form method="post" enctype="multipart/form-data" class="comment-form">
                         {% csrf_token %}
 
-                        <!-- Поле имени скрыто, так как имя берётся из авторизованного пользователя -->
                         {% if user.is_authenticated %}
                             <div class="form-group">
                                 <label class="form-label">
-                                    Ваше имя:
+                                    Your name:
                                 </label>
                                 <input type="text" value="{{ user.username }}" disabled style="background: rgba(0,0,0,0.4); color: #e8ddc3; padding: 12px; border-radius: 6px; width: 100%;">
-                                <span class="form-help">Ваше имя подставляется автоматически</span>
                             </div>
                         {% else %}
                             <div class="form-group">
                                 <label class="form-label">
-                                    Ваше имя:
+                                    Your name:
                                 </label>
                                 <input type="text" value="Гость" disabled style="background: rgba(0,0,0,0.4); color: #e8ddc3; padding: 12px; border-radius: 6px; width: 100%;">
-                                <span class="form-help">Только авторизованные пользователи могут оставлять комментарии</span>
+                                <span class="form-help">Only authorized users can leave comments.</span>
                             </div>
                         {% endif %}
 
                         <div class="form-group">
                             <label for="{{ comment_form.text.id_for_label }}" class="form-label">
-                                Ваше сообщение:
+                                Your comment:
                             </label>
                             {{ comment_form.text }}
                             {% if comment_form.text.errors %}
@@ -182,7 +178,7 @@
 
                         <div class="form-group">
                             <label for="{{ comment_form.image.id_for_label }}" class="form-label">
-                                Приложить карту или рисунок:
+                                Attach Map or Sketch:
                             </label>
                             <div class="file-input-wrapper">
                                 {{ comment_form.image }}
@@ -200,8 +196,8 @@
                             </button>
                         {% else %}
                             <div class="auth-warning">
-                                <p>⚠️ Только авторизованные пользователи могут оставлять комментарии.</p>
-                                <a href="{% url 'login' %}">Войти</a> или <a href="{% url 'register' %}">зарегистрироваться</a>
+                                <p>⚠️ Only authorized users can leave comments.</p>
+                                <a href="{% url 'login' %}">log in</a> или <a href="{% url 'register' %}">sign up</a>
                             </div>
                         {% endif %}
                     </form>
@@ -211,7 +207,7 @@
 
         <footer class="archive-footer">
             <div class="footer-line"></div>
-            <p>Бюро морской разведки • Все права защищены • Эпоха великих пиратов</p>
+            <p>Marine Intelligence Bureau • All Rights Reserved • The Great Pirate Era</p>
             <div class="footer-line"></div>
         </footer>
     </div>

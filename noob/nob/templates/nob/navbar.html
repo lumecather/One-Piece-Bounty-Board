@@ -1,9 +1,9 @@
 {% load static %}
 <nav class="navbar">
     <div class="nav-left">
-        <a href="{% url 'basepage' %}" class="nav-btn">🏴‍☠️ ГАВАНЬ</a>
+        <a href="{% url 'basepage' %}" class="nav-btn">🏴‍☠️ HARBOR</a>
         {% if user.is_authenticated and user.profile.role in 'official admin' %}
-            <a href="{% url 'post_create' %}" class="nav-link">➕ НОВЫЙ ПОСТ</a>
+            <a href="{% url 'post_create' %}" class="nav-link">➕ NEW POST</a>
         {% endif %}
     </div>
     <div class="nav-right">
@@ -25,8 +25,8 @@
                 </form>
             </div>
         {% else %}
-            <a href="{% url 'login' %}" class="nav-link">ВХОД</a>
-            <a href="{% url 'register' %}" class="nav-link">РЕГИСТРАЦИЯ</a>
+            <a href="{% url 'login' %}" class="nav-link">Set Sail</a>
+            <a href="{% url 'register' %}" class="nav-link">Sign Up</a>
         {% endif %}
     </div>
 </nav>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Редактировать пост | {{ post.title }}</title>
+    <title>Edit Post | {{ post.title }}</title>
     {% load static %}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="{% static 'nob/style.css' %}">
@@ -110,80 +110,80 @@
     {% include 'nob/navbar.html' %}
 
     <div class="edit-form-container">
-        <h1>✎ РЕДАКТИРОВАНИЕ РОЗЫСКНОГО ЛИСТА</h1>
+        <h1>✎ EDIT WANTED POSTER</h1>
 
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
 
             <div class="form-group">
-                <label for="{{ form.title.id_for_label }}">ЗАГОЛОВОК</label>
+                <label for="{{ form.title.id_for_label }}">TITLE</label>
                 {{ form.title }}
             </div>
 
             <div class="form-group">
-                <label for="{{ form.content.id_for_label }}">ОПИСАНИЕ</label>
+                <label for="{{ form.content.id_for_label }}">DESCRIPTION</label>
                 {{ form.content }}
             </div>
 
             <div class="form-group">
-                <label for="{{ form.image.id_for_label }}">ИЗОБРАЖЕНИЕ</label>
+                <label for="{{ form.image.id_for_label }}">IMAGE</label>
                 {{ form.image }}
                 {% if post.image %}
                 <div class="current-image">
-                    <p>Текущее изображение:</p>
+                    <p>Current image:</p>
                     <img src="{{ post.image.url }}" alt="{{ post.title }}">
                 </div>
                 {% endif %}
             </div>
 
             <div class="form-group">
-                <label for="{{ form.bounty.id_for_label }}">НАГРАДА (белли)</label>
+                <label for="{{ form.bounty.id_for_label }}">BOUNTY (Belly)</label>
                 {{ form.bounty }}
             </div>
 
             <div class="auto-settings">
-                <h3>⚙️ АВТОМАТИЧЕСКОЕ ПОДНЯТИЕ НАГРАДЫ</h3>
+                <h3>⚙️ AUTOMATIC BOUNTY INCREASE</h3>
 
                 <div class="form-group checkbox-group">
                     {{ form.auto_enabled }}
-                    <label for="{{ form.auto_enabled.id_for_label }}">Включить автоматическое поднятие баунти</label>
+                    <label for="{{ form.auto_enabled.id_for_label }}">Enable automatic bounty increase</label>
                 </div>
 
                 <div class="form-group">
-                    <label for="{{ form.auto_percent.id_for_label }}">ПРОЦЕНТ ПОДНЯТИЯ</label>
+                    <label for="{{ form.auto_percent.id_for_label }}">INCREASE PERCENTAGE</label>
                     {{ form.auto_percent }}
-                    <div class="help-text">На сколько % увеличивать награду каждый раз</div>
+                    <div class="help-text">By what % to increase the bounty each time</div>
                 </div>
 
                 <div class="form-group">
-                    <label for="{{ form.auto_interval.id_for_label }}">ИНТЕРВАЛ (ДНИ)</label>
+                    <label for="{{ form.auto_interval.id_for_label }}">INTERVAL (DAYS)</label>
                     {{ form.auto_interval }}
-                    <div class="help-text">Как часто поднимать награду</div>
+                    <div class="help-text">How often to increase the bounty</div>
                 </div>
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="submit-btn">💾 СОХРАНИТЬ</button>
-                <a href="{% url 'post_detail' post.pk %}" class="cancel-btn">❌ ОТМЕНА</a>
+                <button type="submit" class="submit-btn">💾 SAVE CHANGES</button>
+                <a href="{% url 'post_detail' post.pk %}" class="cancel-btn">❌ CANCEL</a>
             </div>
 
             {% if post.pk %}
             <div style="text-align: center; margin-top: 30px;">
                 <button type="button" class="delete-btn" onclick="confirmDelete()" style="background: #8b0000; color: white; padding: 10px 25px; border-radius: 6px; border: none; cursor: pointer;">
-                    🗑️ УДАЛИТЬ РОЗЫСК
+                    🗑️ DELETE WANTED POST
                 </button>
             </div>
             <script>
             function confirmDelete() {
                 Swal.fire({
-                    title: 'Вы уверены?',
-                    text: "Это действие нельзя отменить!",
+                    title: 'Are you sure?',
+                    text: "This action cannot be undone!",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
                     cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Да, удалить!',
-                    cancelButtonText: 'Отмена'
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'Cancel'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         window.location.href = "{% url 'post_delete' post.pk %}";

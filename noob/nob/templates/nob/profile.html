@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{% if profile.user.username %}{{ profile.user.username }}{% else %}Профиль{% endif %} | Морской розыск</title>
+    <title>{% if profile.user.username %}{{ profile.user.username }}{% else %}Profile{% endif %} | Marine Bounty</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'nob/style.css' %}">
     <link rel="stylesheet" href="{% static 'nob/navbar.css' %}">
@@ -22,7 +22,7 @@
 
         <header class="archive-header">
             <h1 class="archive-title">WANTED</h1>
-            <p class="archive-subtitle">ПРОФИЛЬ</p>
+            <p class="archive-subtitle">PROFILE</p>
             <div class="title-ornament">
                 <span>☠</span>
                 <span>⚓</span>
@@ -32,7 +32,7 @@
 
         {% if can_edit %}
         <div class="edit-banner">
-            <a href="{% url 'profile_edit' %}" class="edit-profile-btn">✎ РЕДАКТИРОВАТЬ ПРОФИЛЬ</a>
+            <a href="{% url 'profile_edit' %}" class="edit-profile-btn">✎ EDIT PROFILE</a>
         </div>
         {% endif %}
 
@@ -47,7 +47,7 @@
                     <div class="profile-image-wrapper placeholder">
                         <div class="placeholder-content">
                             <span class="skull-icon">☠</span>
-                            <span>Нет изображения</span>
+                            <span>No image</span>
                         </div>
                     </div>
                 {% endif %}
@@ -65,7 +65,7 @@
                 {% if profile.organization %}
                 <div class="info-grid">
                     <div class="info-item">
-                        <span class="info-label">ОРГАНИЗАЦИЯ</span>
+                        <span class="info-label">ORGANIZATION</span>
                         <span class="info-value">{{ profile.organization }}</span>
                     </div>
                 </div>
@@ -77,12 +77,12 @@
             <div class="org-header">
                 <h3 class="org-title">
                     <span class="org-icon">🏴‍☠️</span>
-                    ПОСТЫ ОРГАНИЗАЦИИ: {{ organization_name }}
+                    ORGANIZATION POSTS: {{ organization_name }}
                     <span class="org-icon">🏴‍☠️</span>
                 </h3>
                 <div class="org-stats">
-                    <span>📊 {{ org_posts_count }} постов</span>
-                    <span>👥 {{ org_members_count }} участников</span>
+                    <span>📊 {{ org_posts_count }} posts</span>
+                    <span>👥 {{ org_members_count }} members</span>
                 </div>
             </div>
 
@@ -101,7 +101,7 @@
                             <h4 class="org-post-title">
                                 <a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a>
                                 {% if user.is_authenticated and user.profile.organization and post.organization == user.profile.organization %}
-                                <a href="{% url 'post_edit' post.pk %}" class="edit-icon-small" title="Редактировать пост">✎</a>
+                                <a href="{% url 'post_edit' post.pk %}" class="edit-icon-small" title="Edit post">✎</a>
                                 {% endif %}
                             </h4>
 
@@ -114,22 +114,22 @@
                             {% endif %}
 
                             <div class="org-post-footer">
-                                <span class="comment-count">💬 {{ post.comments.count }} комментариев</span>
-                                <a href="{% url 'post_detail' post.pk %}" class="read-more">Читать →</a>
+                                <span class="comment-count">💬 {{ post.comments.count }} comments</span>
+                                <a href="{% url 'post_detail' post.pk %}" class="read-more">Read →</a>
                             </div>
                         </div>
                     {% endfor %}
                 </div>
             {% else %}
                 <div class="no-posts-message">
-                    <p>В этой организации пока нет постов.</p>
+                    <p>This organization has no posts yet.</p>
                 </div>
             {% endif %}
         </div>
         {% endif %}
         <footer class="archive-footer">
             <div class="footer-line"></div>
-            <p>Бюро морской разведки • Все права защищены • Эпоха великих пиратов</p>
+            <p>Marine Intelligence Bureau • All rights reserved • Great Pirate Era</p>
             <div class="footer-line"></div>
         </footer>
     </div>

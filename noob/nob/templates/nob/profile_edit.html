@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Редактировать профиль | Морской розыск</title>
+    <title>Edit Profile | Marine Bounty</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'nob/style.css' %}">
     <link rel="stylesheet" href="{% static 'nob/navbar.css' %}">
@@ -150,7 +150,7 @@
                 <span>☠</span><span>⚓</span><span>☠</span>
             </div>
             <h1 class="archive-title">EDIT</h1>
-            <p class="archive-subtitle">РЕДАКТИРОВАНИЕ ПРОФИЛЯ</p>
+            <p class="archive-subtitle">PROFILE EDITING</p>
             <div class="title-ornament">
                 <span>✎</span>
                 <span>☠</span>
@@ -162,36 +162,36 @@
             {% csrf_token %}
 
             <div class="form-group">
-                <label for="{{ form.image.id_for_label }}">АВАТАР</label>
+                <label for="{{ form.image.id_for_label }}">AVATAR</label>
                 {{ form.image }}
                 {% if profile.image %}
                 <div class="current-image">
-                    <img src="{{ profile.image.url }}" alt="Текущий аватар">
+                    <img src="{{ profile.image.url }}" alt="Current avatar">
                 </div>
                 {% endif %}
             </div>
 
             {% if profile.role == 'admin' %}
             <div class="form-group">
-                <label>РОЛЬ</label>
-                <input type="text" value="Администратор" disabled>
-                <div class="warning-text">🔒 Роль администратора нельзя изменить</div>
+                <label>ROLE</label>
+                <input type="text" value="Administrator" disabled>
+                <div class="warning-text">🔒 Administrator role cannot be changed</div>
             </div>
             <div class="form-group">
-                <label>ОРГАНИЗАЦИЯ</label>
+                <label>ORGANIZATION</label>
                 <input type="text" value="{{ profile.organization }}" disabled>
-                <div class="info-text">Организация администратора</div>
+                <div class="info-text">Administrator's organization</div>
             </div>
             {% elif profile.role == 'official' %}
             <div class="form-group">
-                <label>РОЛЬ</label>
-                <input type="text" value="Сотрудник организации" disabled>
-                <div class="warning-text">🔒 Вы не можете сменить роль. Свяжитесь с администратором.</div>
+                <label>ROLE</label>
+                <input type="text" value="Organization Member" disabled>
+                <div class="warning-text">🔒 You cannot change your role. Contact an administrator.</div>
             </div>
             <div class="form-group">
-                <label>ОРГАНИЗАЦИЯ</label>
+                <label>ORGANIZATION</label>
                 <input type="text" value="{{ profile.organization }}" disabled>
-                <div class="info-text">Организация назначена администратором</div>
+                <div class="info-text">Organization assigned by administrator</div>
             </div>
             {% else %}
             <div class="form-group">
@@ -201,15 +201,15 @@
             {% endif %}
 
             <div class="form-actions">
-                <button type="submit" class="submit-btn">СОХРАНИТЬ</button>
-                <a href="{% url 'profile_self' %}" class="cancel-btn">ОТМЕНА</a>
+                <button type="submit" class="submit-btn">SAVE</button>
+                <a href="{% url 'profile_self' %}" class="cancel-btn">CANCEL</a>
             </div>
         </form>
     </div>
 
     <div class="archive-footer">
         <div class="footer-line"></div>
-        <p>Бюро морской разведки • Все права защищены • Эпоха великих пиратов</p>
+        <p>Marine Intelligence Bureau • All rights reserved • Great Pirate Era</p>
         <div class="footer-line"></div>
     </div>
 </div>

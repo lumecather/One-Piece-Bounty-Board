@@ -73,16 +73,16 @@ class Comment(models.Model):
 
 class PirateProfile(models.Model):
     class Role(models.TextChoices):
-        USERR = "just_user", "Пользователь"
-        PIRATE = 'pirate', 'Пират'
-        HUNTER = 'hunter', 'Охотник за головами'
-        ADMIN = 'admin', 'Администратор'
-        OFFICIAL = 'official', 'Сотрудник организации'
+        USERR = "just_user", "User"
+        PIRATE = 'pirate', 'Pirate'
+        HUNTER = 'hunter', 'Bounty hunter'
+        ADMIN = 'admin', 'Admin'
+        OFFICIAL = 'official', 'Official'
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     image = models.ImageField(upload_to='avatars/', blank=True, null=True)
     role = models.CharField(max_length=20, choices=Role.choices, default=Role.USERR)
-    organization = models.CharField(max_length=100, blank=True, help_text='Название организации (если есть)')
+    organization = models.CharField(max_length=100, blank=True, help_text='Name of organization (if exist)')
 
     def __str__(self):
         return f"{self.user.username} — {self.get_role_display()}"

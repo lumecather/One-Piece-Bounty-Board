@@ -8,7 +8,7 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ['text', "image"]
         widgets = {
-            'text': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Ваш комментарий'}),
+            'text': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Your comment'}),
             'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
 
@@ -23,9 +23,9 @@ class PostForm(forms.ModelForm):
 
 
 class PostEditForm(forms.ModelForm):
-    auto_enabled = forms.BooleanField(required=False, label="Автоподнятие баунти")
-    auto_percent = forms.IntegerField(min_value=1, max_value=500, label="Процент поднятия", initial=5)
-    auto_interval = forms.IntegerField(min_value=1, max_value=365, label="Интервал (дни)", initial=7)
+    auto_enabled = forms.BooleanField(required=False, label="auto raise bounty")
+    auto_percent = forms.IntegerField(min_value=1, max_value=500, label="raise percentage", initial=5)
+    auto_interval = forms.IntegerField(min_value=1, max_value=365, label="interval (days)", initial=7)
 
     class Meta:
         model = Post
@@ -58,7 +58,7 @@ class PostEditForm(forms.ModelForm):
 
 class ProfileEditForm(forms.ModelForm):
     role_choice = forms.ChoiceField(
-        choices=[('just_user', 'user'), ('hunter', 'Охотник за головами'), ("pirate", "pirate")],
+        choices=[('just_user', 'user'), ('hunter', 'bounty hunter'), ("pirate", "pirate")],
         required=False,
         label='Роль'
     )
@@ -71,7 +71,7 @@ class ProfileEditForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if self.instance and self.instance.role in ['admin', 'official']:
             self.fields['role_choice'].widget.attrs['disabled'] = True
-            self.fields['role_choice'].help_text = 'Роль нельзя изменить'
+            self.fields['role_choice'].help_text = 'Cant change this role'
         else:
-            self.fields['role_choice'].initial = self.instance.role if self.instance.role in ['just_userr', 'hunter',
+            self.fields['role_choice'].initial = self.instance.role if self.instance.role in ['just_user', 'hunter',
                                                                                               "pirate"] else 'just_user'
