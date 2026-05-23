@@ -13,8 +13,8 @@ app.autodiscover_tasks()
 app.conf.beat_schedule = {
     'check-all-posts-bounties': {
         'task': 'nob.tasks.check_all_posts_bounties',
-        # 'schedule': crontab(hour=0, minute=0),  # каждый день в 00:00
-        'schedule': crontab(minute='*/1'),  # для теста: каждую минуту
+        'schedule': crontab(hour=0, minute=0),
+        # 'schedule': crontab(minute='*/1'),  # for test
     },
 
     # Тестовая задача для проверки (раскомментировать для теста)
