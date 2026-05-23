@@ -238,12 +238,6 @@ def create_user_profile(sender, instance, created, **kwargs):
         PirateProfile.objects.get_or_create(user=instance)
 
 
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    if hasattr(instance, 'profile'):
-        instance.profile.save()
-
-
 @receiver(post_save, sender=Post)
 def create_bounty_auto(sender, instance, created, **kwargs):
     if created:
@@ -251,12 +245,16 @@ def create_bounty_auto(sender, instance, created, **kwargs):
 
 
 @receiver(post_save, sender=User)
-def create_admin_profile(sender, instance, created, **kwargs):
-    if created and instance.is_superuser:
-        PirateProfile.objects.create(
-            user=instance,
-            role='admin',
-            organization='admins'
-        )
-    elif created:
-        PirateProfile.objects.create(user=instance)
+def create_or_update_user_profile(sender, instance, created, **kwargs):
+    if created:
+        if instance.is_superuser:
+            PirateProfile.objects.create(
+                user=instance,
+                role='admin',
+                organization='admins'
+            )
+        else:
+            PirateProfile.objects.create(user=instance)
+    else:
+        if hasattr(instance, 'profile'):
+            instance.profile.save()

@@ -17,4 +17,4 @@ COPY . .
 
 RUN python manage.py collectstatic --noinput
 
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "noob.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--timeout", "300", "--limit-request-line", "0", "--limit-request-field_size", "0", "noob.wsgi:application"]
