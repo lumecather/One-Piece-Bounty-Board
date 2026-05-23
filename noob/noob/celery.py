@@ -16,10 +16,4 @@ app.conf.beat_schedule = {
         'schedule': crontab(hour=0, minute=0),
         # 'schedule': crontab(minute='*/1'),  # for test
     },
-
-    # Тестовая задача для проверки (раскомментировать для теста)
-    # 'test-task': {
-    #     'task': 'nob.tasks.test_task',
-    #     'schedule': crontab(minute='*/5')
-    # },
 }
