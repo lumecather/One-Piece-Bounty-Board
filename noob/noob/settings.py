@@ -11,8 +11,8 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
-
 import os
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,8 +30,6 @@ SECRET_KEY = env('SECRET_KEY')
 DEBUG = env.bool('DEBUG', default=False)
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
 
-# Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,13 +39,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "nob",
     'debug_toolbar',
-    'rest_framework',  # DRF
-    'rest_framework_simplejwt',  # JWT
+    'rest_framework',
+    'rest_framework_simplejwt',
     'django_filters'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -55,7 +54,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'noob.urls'
@@ -79,8 +77,6 @@ WSGI_APPLICATION = 'noob.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-
-# """
 
 import dj_database_url
 
@@ -126,9 +122,14 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [BASE_DIR / 'static']
+
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+WHITENOISE_USE_FINDERS = True
+WHITENOISE_AUTOREFRESH = DEBUG
+WHITENOISE_MAX_AGE = 31536000 if not DEBUG else 0
 
 INTERNAL_IPS = [
     '127.0.0.1',
@@ -150,8 +151,6 @@ REST_FRAMEWORK = {
 }
 
 # JWT настройки (время жизни токенов)
-from datetime import timedelta
-
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
@@ -169,26 +168,18 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'UTC'
 
-# ---------- Надёжность ----------
-# Подтверждение задачи ПОСЛЕ выполнения (если воркер упал – задача вернётся в очередь)
 CELERY_TASK_ACKS_LATE = True
-# Задача будет перезапущена, если воркер аварийно завершился
-CELERY_TASK_REJECT_ON_WORKER_LOST = True
-# Отслеживать состояние STARTED (для мониторинга)
 CELERY_TASK_TRACK_STARTED = True
-# Параметры повторов по умолчанию (можно переопределить в каждой задаче)
-CELERY_TASK_DEFAULT_RETRY_DELAY = 60  # 1 минута
+CELERY_TASK_DEFAULT_RETRY_DELAY = 60
 CELERY_TASK_MAX_RETRIES = 3
-# Не удалять задачу из очереди, пока она не подтверждена (ACK)
 CELERY_TASK_ACKS_ON_FAILURE_OR_TIMEOUT = True
 
-# Ограничение времени выполнения (уже есть, можно оставить)
-CELERY_TASK_TIME_LIMIT = 1800  # 30 минут
-CELERY_TASK_SOFT_TIME_LIMIT = 1500  # 25 минут
+CELERY_TASK_TIME_LIMIT = 1800
+CELERY_TASK_SOFT_TIME_LIMIT = 1500
 
 # Параметры транспорта
 CELERY_BROKER_TRANSPORT_OPTIONS = {
-    'visibility_timeout': 43200,  # 12 часов – время, через которое неподтверждённая задача вернётся в очередь
+    'visibility_timeout': 43200,
 }
 CELERY_RESULT_BACKEND_TRANSPORT_OPTIONS = {
     'visibility_timeout': 43200,

@@ -468,3 +468,59 @@ body::before {
     color: #c9a32b !important;
     border-color: #8b5a2b;
 }
+
+/* Стили для карандашиков редактирования */
+.edit-icon {
+    display: inline-block;
+    margin-left: 10px;
+    color: #b87333;
+    text-decoration: none;
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+.edit-icon:hover {
+    color: #ffd966;
+    transform: scale(1.1);
+}
+
+.edit-icon-small {
+    display: inline-block;
+    margin-left: 8px;
+    color: #b87333;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.edit-icon-small:hover {
+    color: #ffd966;
+}
+
+.edit-icon-large {
+    transition: all 0.3s ease;
+}
+
+.edit-icon-large:hover {
+    background: #c9772e !important;
+    transform: translateY(-2px);
+}
+
+.author-link {
+    color: var(--bounty-gold);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-weight: 500;
+}
+
+.author-link:hover {
+    color: var(--bounty-gold-dark);
+    text-decoration: underline;
+}
+
+.organization-badge {
+    font-size: 0.75rem;
+    color: var(--accent-light);
+    margin-left: 0.3rem;
+    white-space: nowrap;
+}

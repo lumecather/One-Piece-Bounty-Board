@@ -22,13 +22,27 @@ services:
       - "6379:6379"
     restart: unless-stopped
 
+  # Nginx
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    ports:
+      - "80:80"
+    volumes:
+      - static_volume:/static  # Монтируем статику в /static внутри nginx
+      - media_volume:/media    # Монтируем медиа в /media внутри nginx
+    depends_on:
+      - web
+    restart: unless-stopped
+
   # Веб-приложение Django
   web:
     build: .
     env_file:
       - .env
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"  # Только внутри Docker-сети
     depends_on:
       db:
         condition: service_healthy
@@ -80,7 +94,6 @@ services:
       - redis
       - worker
     restart: unless-stopped
-
 
 volumes:
   postgres_data:
