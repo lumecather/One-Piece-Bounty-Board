@@ -11,3 +11,4 @@ whitenoise==6.9.0
 Pillow
 gunicorn==23.0.0
 django-debug-toolbar==5.1.0
+flower
