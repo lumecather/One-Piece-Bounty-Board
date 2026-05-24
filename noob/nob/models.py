@@ -94,9 +94,3 @@ class PirateProfile(models.Model):
             if img.height > 600 or img.width > 600:
                 img.thumbnail((600, 600))
                 img.save(self.image.path)
-
-
-@receiver(post_save, sender=User)
-def create_pirate_profile(sender, instance, created, **kwargs):
-    if created:
-        PirateProfile.objects.create(user=instance)

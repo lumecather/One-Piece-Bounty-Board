@@ -239,18 +239,14 @@ def create_bounty_auto(sender, instance, created, **kwargs):
 
 
 @receiver(post_save, sender=User)
-def create_or_update_user_profile(sender, instance, created, **kwargs):
+def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        if instance.is_superuser:
-            PirateProfile.objects.get_or_create(
-                user=instance,
-                defaults={
-                    'role': 'admin',
-                    'organization': 'admins'
-                }
-            )
-        else:
-            PirateProfile.objects.get_or_create(user=instance)
+        role = 'admin' if instance.is_superuser else PirateProfile.Role.USERR
+        organization = 'admins' if instance.is_superuser else ''
+        PirateProfile.objects.create(
+            user=instance,
+            role=role,
+            organization=organization
+        )
     else:
-        if hasattr(instance, 'pirateprofile'):
-            instance.pirateprofile.save()
+        PirateProfile.objects.get_or_create(user=instance)
