@@ -1,5 +1,4 @@
 services:
-  # База данных
   db:
     image: postgres:15
     environment:
@@ -9,40 +8,24 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U pirate_user" ]
+      test: ["CMD-SHELL", "pg_isready -U pirate_user -d pirate_db"]
       interval: 5s
       timeout: 5s
       retries: 5
     restart: unless-stopped
 
-  # Redis
   redis:
     image: redis:7
     ports:
       - "6379:6379"
     restart: unless-stopped
 
-  # Nginx
-  nginx:
-    build:
-      context: .
-      dockerfile: Dockerfile.nginx
-    ports:
-      - "80:80"
-    volumes:
-      - static_volume:/static  # Монтируем статику в /static внутри nginx
-      - media_volume:/media    # Монтируем медиа в /media внутри nginx
-    depends_on:
-      - web
-    restart: unless-stopped
-
-  # Веб-приложение Django
   web:
     build: .
     env_file:
       - .env
     expose:
-      - "8000"  # Только внутри Docker-сети
+      - "8000"
     depends_on:
       db:
         condition: service_healthy
@@ -53,7 +36,6 @@ services:
       - media_volume:/app/media
     restart: unless-stopped
 
-  # Celery Worker
   worker:
     build: .
     env_file:
@@ -64,11 +46,13 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
     volumes:
       - media_volume:/app/media
     restart: unless-stopped
 
-  # Celery Beat
   beat:
     build: .
     env_file:
@@ -79,9 +63,11 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
     restart: unless-stopped
 
-  # Flower
   flower:
     build:
       context: .
@@ -90,9 +76,24 @@ services:
       - .env
     ports:
       - "5555:5555"
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
     depends_on:
       - redis
       - worker
+    restart: unless-stopped
+
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    ports:
+      - "80:80"
+    volumes:
+      - static_volume:/static
+      - media_volume:/media
+    depends_on:
+      - web
     restart: unless-stopped
 
 volumes:
