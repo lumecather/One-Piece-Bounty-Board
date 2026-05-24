@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Регистрация | Морской розыск</title>
+    <title>Sign Up | Marine Bounty</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'nob/style.css' %}">
     <style>
@@ -74,7 +74,7 @@
 <body>
     <div class="auth-container">
         <div class="auth-card">
-            <div class="auth-title">🏴‍☠️ СТАТЬ ПИРАТОМ</div>
+            <div class="auth-title">🏴‍☠️ BECOME A PIRATE</div>
             <div class="auth-subtitle">JOIN THE GRAND LINE</div>
 
             {% if form.errors %}
@@ -89,16 +89,16 @@
 
             <form method="post" class="auth-form">
                 {% csrf_token %}
-                <input type="text" name="username" placeholder="ИМЯ ПОЛЬЗОВАТЕЛЯ" autocomplete="off">
+                <input type="text" name="username" placeholder="USERNAME" autocomplete="off">
                 <input type="email" name="email" placeholder="EMAIL">
-                <input type="password" name="password1" placeholder="ПАРОЛЬ">
-                <input type="password" name="password2" placeholder="ПОДТВЕРДИТЕ ПАРОЛЬ">
-                <button type="submit">ЗАРЕГИСТРИРОВАТЬСЯ</button>
+                <input type="password" name="password1" placeholder="PASSWORD">
+                <input type="password" name="password2" placeholder="CONFIRM PASSWORD">
+                <button type="submit">SIGN UP</button>
             </form>
 
             <div class="auth-links">
-                <p>Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a></p>
-                <p><a href="{% url 'basepage' %}">← На главную</a></p>
+                <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+                <p><a href="{% url 'basepage' %}">← Back to home</a></p>
             </div>
         </div>
     </div>

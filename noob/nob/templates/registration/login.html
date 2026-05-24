@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Вход в систему | Морской розыск</title>
+    <title>Login | Marine Bounty</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'nob/style.css' %}">
     <style>
@@ -81,23 +81,23 @@
 <body>
     <div class="auth-container">
         <div class="auth-card">
-            <div class="auth-title">⚓ ВХОД В ГАВАНЬ</div>
+            <div class="auth-title">⚓ ENTER THE HARBOR</div>
             <div class="auth-subtitle">AUTHORIZED PERSONNEL ONLY</div>
 
             {% if form.errors %}
-                <div class="error-message">❌ Неверное имя или пароль</div>
+                <div class="error-message">❌ Incorrect username or password</div>
             {% endif %}
 
             <form method="post" class="auth-form">
                 {% csrf_token %}
-                <input type="text" name="username" placeholder="ИМЯ ПИРАТА" autocomplete="off">
-                <input type="password" name="password" placeholder="ПАРОЛЬ">
-                <button type="submit">ВОЙТИ</button>
+                <input type="text" name="username" placeholder="PIRATE NAME" autocomplete="off">
+                <input type="password" name="password" placeholder="PASSWORD">
+                <button type="submit">LOGIN</button>
             </form>
 
             <div class="auth-links">
-                <p>Нет аккаунта? <a href="{% url 'register' %}">Зарегистрироваться</a></p>
-                <p><a href="{% url 'basepage' %}">← На главную</a></p>
+                <p>No account? <a href="{% url 'register' %}">Sign up</a></p>
+                <p><a href="{% url 'basepage' %}">← Back to home</a></p>
             </div>
         </div>
     </div>
