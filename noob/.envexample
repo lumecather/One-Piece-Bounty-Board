@@ -1,0 +1,15 @@
+# Django settings
+DEBUG=False
+SECRET_KEY=your-secret-key-here
+ALLOWED_HOSTS=127.0.0.1,localhost,your-server-ip
+
+# Database (PostgreSQL)
+DATABASE_URL=postgres://pirate_user:pirate_password@db:5432/pirate_db
+
+# Redis (Celery)
+REDIS_URL=redis://redis:6379/0
+
+# Flower (Celery monitoring)
+FLOWER_USER=admin
+FLOWER_PASSWORD=your-strong-password
+FLOWER_PORT=5555
