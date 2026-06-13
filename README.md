@@ -346,3 +346,7 @@ docker compose exec web python manage.py collectstatic --noinput
 
 > I also want to note that the folders are named noob or nob just for fun because at first I didn't intend it as a serious
 project for a portfolio, but it turned out cool
+
+And here's a screenshot of the main page of the already hosted site and super epic posts.
+
+<img width="1920" height="1080" alt="trashposts" src="https://github.com/user-attachments/assets/f177e8bc-10e0-4521-ab43-71ffdb297525" />
