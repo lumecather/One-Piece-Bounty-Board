@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "nob",
     'debug_toolbar',
     'rest_framework',
+    'drf_yasg',
     'rest_framework_simplejwt',
     'django_filters'
 ]

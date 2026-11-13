@@ -1,2 +1,17 @@
+# Python
+__pycache__/
+*.pyc
 /venv/
+
+# IDE
 /.idea/
+
+# Secrets & local configs
+.env
+noob/flowerconfig.py
+
+# Local data
+*.sqlite3
+noob/media/
+noob/staticfiles/
+noob/celerybeat-schedule*

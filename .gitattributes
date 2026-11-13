@@ -1,0 +1,3 @@
+# Show the repo as Python on GitHub (CSS/HTML are templates and styles)
+*.css linguist-vendored
+*.html linguist-detectable=false

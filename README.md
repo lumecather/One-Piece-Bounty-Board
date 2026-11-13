@@ -1,348 +1,140 @@
-# 🏴‍☠️ WANTED — Marine Bounty Board
+# 🏴‍☠️ One Piece Bounty Board
 
-**One Piece Bounty Board** — a web platform for creating and tracking wanted posters in the world of pirates. 
-Role-based access, background tasks, and production-ready deployment.
+A Django web app for publishing and tracking **wanted posters** in the One Piece world:
+role-based access, comments, a REST API with JWT, and **bounties that grow automatically** via Celery.
+Fully containerized with Docker Compose (Postgres, Redis, Celery worker + beat, Flower, Nginx).
 
-📦 **Repository:** https://github.com/lumecather/One-Piece-Bounty-Board
-
----
-
-## 📌 Table of Contents
-
-1. [🎮 Game Mechanics](#-game-mechanics)
-2. [👥 Role System & Permissions](#-role-system--permissions)
-3. [📜 Post Management](#-post-management)
-4. [📈 Auto Bounty Increase (Celery)](#-auto-bounty-increase-celery)
-5. [👑 Admin Panel](#-admin-panel)
-6. [✨ Features](#-features)
-7. [🛠️ Tech Stack](#-tech-stack)
-8. [💻 Local Development](#-local-development)
-9. [🐳 Deployment](#-deployment)
-10. [📦 Environment Variables](#-environment-variables)
-11. [⚠️ Production Checklist](#-production-checklist)
-12. [📁 Note on Folder Names](#-note-on-folder-names)
-
----
-
-## 🎮 Game Mechanics
-
-The project simulates a pirate world where:
-
-- **Regular users** can browse wanted posters and comment
-- **Organization members** can create wanted posters
-- **Admins** have full control over everything
-- **Bounties automatically increase** over time for active posters
-
----
-
-## 👥 Role System & Permissions
-
-### Available Roles
-
-| Role | Can create posts | Can edit own posts | Can edit any post | Organization required |
-|------|------------------|--------------------|--------------------|------------------------|
-| **User / Pirate / Hunter** | ❌ No | ❌ No | ❌ No | No |
-| **Organization Member (Official)** | ✅ Yes | ✅ Yes | ❌ No | ✅ Yes |
-| **Admin** | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes (auto: "admins") |
-
-### How Roles Work
-
-1. **New users** register with role "User" by default
-2. **Users can switch** between "Pirate", "Hunter" and "User" freely in profile settings
-3. **Organization Member** and **Admin** roles can only be assigned via admin panel
-4. **Admins automatically get** `organization = "admins"`
-5. **Organization members cannot change** their role or organization through the edit form — only admin can modify them
-
-### Organization Logic
-
-- Each user can belong to **one marine organization**
-- **Posts created by organization members** automatically inherit the author's organization
-- **Post visibility in profiles:** Users see posts from their own organization in a special section
-
----
-
-## 📝 Post Management
-
-Wanted posters are the core of the platform. Only authorized roles can create, edit, and manage them.
-
-### Creating a Post
-
-Only **Organization members**, and **Admins** can create posts.
-
-**Required fields:**
-- Title
-- Content
-- Bounty (in Berry/Belli)
-- Image (wanted poster)
-
-**Auto-filled fields:**
-- Author (current user)
-- Date (auto `now_add`)
-- Organization (taken from author's profile)
-
-### Editing a Post
-
-- **Admin** can edit any post (in panel)
-- **Organization members** can only edit posts within their organization
-
-### Auto Bounty Increase
-
-Each post can have a **BountyAuto** configuration:
-
-- `enabled` — toggle auto‑increase on/off
-- `percent` — increase percentage
-- `interval_days` — how often to increase (default 7 days)
-- `last_run` — timestamp of last increase
-
-**Logic:**  
-Every Sunday at 9:00 AM, Celery task runs and increases bounties for all `enabled` posts.
-
-⚠️ **Requirements for Auto-Increase:**
-To make this feature work, ensure that **Redis server is running**, and then start the following background tasks in separate terminal windows:
-
-1. **Start Celery Beat** (schedules tasks):
-   ```bash
-   celery -A noob beat --loglevel=info
-   ```
-
-2. **Start Celery Worker** (executes tasks):
-   ```bash
-   celery -A noob worker --loglevel=info
-   ```
-
----
-
-## ⚙️ Auto Bounty Increase (Celery)
-
-### How It Works
-
-1. **Celery Beat** scheduler sends a task every Sunday at 09:00
-2. **Celery Worker** executes `check_all_posts_bounties` task
-3. For each post with `bounty_auto.enabled = True`:
-   - Checks if `last_run` is None or > `interval_days`
-   - Calculates new bounty:  
-     `new_bounty = current_bounty + (current_bounty * percent / 100)`
-   - Updates `last_run` to now
-   - Saves the post
-
----
-
-## 🖥️ Admin Panel
-
-> *"With great power comes great responsibility... and a lot of buttons."*
-
-### 🔐 Access
-
-Log in with your **superuser credentials**.  
-*If you don't have one — create it:*
-
-```bash
-python manage.py createsuperuser
-```
-then go to /admin page
-## 👑 Admin Panel & User Management
-
-### ⚙️ What You Can Manage
-
-
-| Section | Description |
-| :--- | :--- |
-| **👥 Users** | Manage accounts, reset passwords, and tweak permissions. |
-| **🏴‍☠️ Pirate Profiles** | Change roles, assign organizations, and control who's who. |
-| **📜 Posts** | Edit or delete any wanted poster (change bounty, image, organization). |
-| **💬 Comments** | Moderate the chaos — delete any comment if necessary. |
-| **📈 Bounty Auto** | Configure auto‑increase settings per post. |
-
-### 🎯 Assigning Roles via Admin Panel
-
-1. Go to the **Pirate Profiles** section.
-2. Find the pirate you want to upgrade (or downgrade 👀).
-3. Change the **Role** field:
-   * `Pirate` — Just a regular sailor.
-   * `Hunter` — Cool title, no extra powers.
-   * `Official` — Can create wanted posters *(requires organization)*.
-   * `Admin` — Full control over everything.
-4. *For Official:* Fill the **Organization** field (e.g., `"Marines"`, `"Bounty Hunters Guild"`).
-5. Hit **Save**.
-
-> 💡 **Pro tip:** Admins automatically get `organization = "admins"` via Django signal — no manual input needed.
-
-### 🧙‍♂️ Admin Superpowers
-*What Admins Can Do That Others Can't:*
-
-* **Edit any post** (even if it belongs to another user).
-* **Delete** any post or comment instantly.
-* **Change roles** of any other user.
-* **Assign organizations** to Official members.
-* **Full oversight:** See and manage absolutely everything in the admin panel.
+<!-- Add 2–3 screenshots to docs/screenshots/ -->
+| Wanted board | Poster page | Profile |
+|---|---|---|
+| ![](docs/screenshots/board.png) | ![](docs/screenshots/poster.png) | ![](docs/screenshots/profile.png) |
 
 ---
 
 ## ✨ Features
 
-- 👤 **Role-based access** — Users, Officials, Admins.
-- 📜 **Wanted Posters** — create, edit, auto‑increase bounty.
-- 💬 **Comments** — authenticated users only, linked to profiles.
-- 🖼️ **Pirate Profiles** — avatar, organization, role.
-- ⚙️ **Background Tasks** — Celery + Redis for auto‑bounty updates.
-- 🐳 **Docker Deployment** — fully containerized for VPS.
-
----
+- 📜 **Wanted posters** — title, description, bounty (Berry), image (auto-resized to 600px with Pillow)
+- 👥 **Roles & permissions** — User / Pirate / Hunter / Official / Admin
+- 🏛️ **Organizations** — officials publish posters on behalf of their organization
+- 💬 **Comments** with images, for signed-in users
+- 📈 **Auto bounty increase** — per-poster rules (percent + interval), executed by Celery Beat
+- 🔌 **REST API** — DRF viewsets, JWT auth, filtering, pagination, Swagger / ReDoc docs
+- 🐳 **Production-style deployment** — Docker Compose, Gunicorn, Nginx, WhiteNoise
 
 ## 🛠️ Tech Stack
 
-**Backend:**  
-- Django 5 / Django REST Framework  
-- PostgreSQL (production) / SQLite (local)  
-- Celery + Redis  
-- Gunicorn + Nginx (optional)  
+| Layer | Tools |
+|---|---|
+| Backend | Python, Django 5, Django REST Framework, SimpleJWT, django-filter, drf-yasg |
+| Background jobs | Celery (worker + beat), Redis, Flower |
+| Database | PostgreSQL (Docker) |
+| Infra | Docker Compose, Gunicorn, Nginx, WhiteNoise |
 
-**DevOps:**  
-- Docker / Docker Compose  
-- GitHub Actions (planned)  
+## 🏗️ Architecture
 
-**Other:**  
-- Pillow (image resize & optimization)  
-- Whitenoise (static files)  
-- Django Debug Toolbar  
-
----
-
-## 🚀 Local Development
-
-### Prerequisites
-- Python 3.11+
-- PostgreSQL (or SQLite for quick start)
-- Redis (for Celery)
-
-Monitoring
-Celery Flower is included in the plan but not yet configured.
-Logs are available in Celery worker terminal.
-
----
-
-## 🐳 Deployment & Production
-
-### 🚀 Quick Deployment (Docker)
-
-**Prerequisites:** Docker & Docker Compose installed on your server.
-
-```bash
-# Clone the repository
-git clone https://github.com/lumecather/One-Piece-Bounty-Board.git
-cd One-Piece-Bounty-Board/noob
-
-# Create environment configuration
-cp .env.example .env
-# 📝 Edit .env with your database credentials and allowed hosts
-
-# Build and start containers in background
-docker compose up -d --build
-
-# Apply database migrations
-docker compose exec web python manage.py migrate
-
-# Create admin (superuser) account
-docker compose exec web python manage.py createsuperuser
-
-# Collect static files
-docker compose exec web python manage.py collectstatic --noinput
+```mermaid
+flowchart LR
+    B[Browser / API client] --> N[Nginx]
+    N --> W[Django + Gunicorn]
+    W --> P[(PostgreSQL)]
+    W --> R[(Redis)]
+    BEAT[Celery Beat] -->|schedule| R
+    R --> WK[Celery Worker]
+    WK -->|increase bounties| P
+    F[Flower] --> R
 ```
 
 ---
 
-### 🔧 Manual Deployment (Without Docker)
+## 👥 Roles
 
-1. **Install system dependencies:**
-   ```bash
-   sudo apt update
-   sudo apt install python3-pip nginx postgresql redis
-   ```
+| Role | Create posters | Edit own | Edit any | How to get it |
+|---|:---:|:---:|:---:|---|
+| User / Pirate / Hunter | ❌ | ❌ | ❌ | switch freely in profile |
+| Official | ✅ | ✅ (own organization) | ❌ | assigned by admin, requires organization |
+| Admin | ✅ | ✅ | ✅ | assigned by admin, organization `admins` set automatically (signal) |
 
-2. **Clone & setup virtual environment:**
-   *Follow the same steps as in local development.*
+## 📈 Auto Bounty Increase
 
-3. **Configure PostgreSQL:**
-   * Create a database and user.
-   * Set your `DATABASE_URL` in the `.env` file.
+Each poster can have a `PostBountyAuto` config: `enabled`, `percent`, `interval_days`, `last_run`.
 
-4. **Prepare assets and database:**
-   ```bash
-   python manage.py collectstatic --noinput
-   python manage.py migrate
-   ```
+Celery Beat runs `check_all_posts_bounties` every day at 00:00 UTC. For every enabled poster whose interval has passed:
 
-5. **Configure Gunicorn:**
-   * Set up Gunicorn as a `systemd` service to keep Django running.
+```
+new_bounty = bounty + bounty * percent / 100
+```
 
-6. **Configure Nginx as a reverse proxy:**
-   ```nginx
-   server {
-       listen 80;
-       server_name your-domain.com;
-       
-       location /static/ {
-           alias /path/to/staticfiles/;
-       }
-       
-       location /media/ {
-           alias /path/to/media/;
-       }
-       
-       location / {
-           proxy_pass http://127.0.0.1:8000;
-           proxy_set_header Host $host;
-           proxy_set_header X-Real-IP $remote_addr;
-       }
-   }
-   ```
+Then `last_run` is updated. Tasks use retries and time limits.
 
-7. **Set up SSL with Let's Encrypt:**
-   ```bash
-   sudo certbot --nginx -d your-domain.com
-   ```
+## 🔌 REST API
 
-8. **Start services:**
-   ```bash
-   sudo systemctl start gunicorn
-   sudo systemctl restart nginx
-   ```
+| Endpoint | Description |
+|---|---|
+| `POST /api/token/` | get JWT access + refresh tokens |
+| `POST /api/token/refresh/` | refresh access token |
+| `/api/posts/` | wanted posters (CRUD) |
+| `/api/comments/` | comments |
+| `/api/profiles/` | pirate profiles |
+| `/swagger/`, `/redoc/` | interactive API docs |
+
+Read access is public; writing requires a JWT (`Authorization: Bearer <token>`).
 
 ---
 
-### 📦 Environment Variables (`.env`)
+## 🚀 Run with Docker
 
+```bash
+git clone https://github.com/lumecather/One-Piece-Bounty-Board.git
+cd One-Piece-Bounty-Board/noob
 
-| Variable | Description | Example |
-| :--- | :--- | :--- |
-| **`DEBUG`** | Development mode (*set `False` in production*). | `False` |
-| **`SECRET_KEY`** | Django secret key for cryptographic signing. | `your-secret-key-here` |
-| **`ALLOWED_HOSTS`**| Comma‑separated list of domains or IPs. | `your-domain.com,123.45.67.89` |
-| **`DATABASE_URL`** | PostgreSQL connection string. | `postgres://user:pass@db:5432/dbname` |
-| **`REDIS_URL`** | Redis connection string (required for Celery). | `redis://redis:6379/0` |
+cp .env.example .env        # then set SECRET_KEY and ALLOWED_HOSTS
+docker compose up -d --build
+docker compose exec web python manage.py migrate
+docker compose exec web python manage.py createsuperuser
+```
+
+- Site: http://localhost
+- Admin: http://localhost/admin
+- Flower: http://localhost:5555
+
+## 💻 Run locally (without Docker)
+
+```bash
+cd noob
+python -m venv venv && venv\Scripts\activate     # Linux/macOS: source venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env                              # DATABASE_URL can be sqlite:///db.sqlite3
+python manage.py migrate
+python manage.py runserver
+
+# in separate terminals (Redis must be running):
+celery -A noob worker -l info
+celery -A noob beat -l info
+```
+
+## 📦 Environment variables
+
+| Variable | Example |
+|---|---|
+| `DEBUG` | `False` |
+| `SECRET_KEY` | `your-secret-key` |
+| `ALLOWED_HOSTS` | `localhost,127.0.0.1,your-domain.com` |
+| `DATABASE_URL` | `postgres://pirate_user:pirate_password@db:5432/pirate_db` |
+| `REDIS_URL` | `redis://redis:6379/0` |
+| `FLOWER_USER`, `FLOWER_PASSWORD` | Flower basic auth |
+
+## ⚠️ Before real production
+
+- [ ] Strong `SECRET_KEY`, `DEBUG=False`, real `ALLOWED_HOSTS`
+- [ ] Change the default Postgres password in `docker-compose.yml`
+- [ ] Don't expose Redis (`6379`) and Flower (`5555`) ports publicly
+- [ ] HTTPS (Let's Encrypt), database backups, error logging (Sentry)
 
 ---
 
-### ⚠️ Production Checklist
+> Fun fact: the folders are called `noob` and `nob` because this started as a practice project —
+> and then it grew into something worth showing. 🏴‍☠️
 
-* [ ] Set `DEBUG=False` in your `.env` file.
-* [ ] Generate a brand new, strong `SECRET_KEY`.
-* [ ] Set proper domains/IPs in `ALLOWED_HOSTS`.
-* [ ] Use **PostgreSQL** instead of SQLite.
-* [ ] Enable **HTTPS** via Let's Encrypt (Certbot).
-* [ ] Set up regular database backups.
-* [ ] Configure error logging (Sentry recommended).
-* [ ] Run **Celery worker** and **Beat** as background `systemd` services.
-* [ ] **Set up Flower for Celery monitoring** (optional but recommended)
- Flower provides a web interface to monitor your Celery workers and tasks.
+## License
 
-  ```bash
-  # Install Flower
-  pip install flower
-
-  # Run as systemd service or Docker container
-  celery -A noob flower --port=5555 --basic_auth=admin:your_strong_password
----
-
-> I also want to note that the folders are named noob or nob just for fun because at first I didn't intend it as a serious
-project for a portfolio, but it turned out cool
+MIT
